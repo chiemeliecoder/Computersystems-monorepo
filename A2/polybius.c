@@ -32,7 +32,7 @@
 #define TABLE_WIDTH 5
 #define ALPHABET {"ABCDEFGHIKLMNOPQRSTUVWXYZ"}
 
-enum TEXT_TYPE { WITH_BLANK, NO_BLANK };
+//enum TEXT_TYPE { WITH_BLANK, NO_BLANK };
 
 /*
  * create table
