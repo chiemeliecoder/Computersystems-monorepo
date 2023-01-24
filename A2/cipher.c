@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
 
     printf("Randomly generate a table:\n");
     table = generateTable();
-    printTable(table);
+    //printTable(table);
 
     printf("table Encryption 1\n");
     ciphertext1 = pbEncode(table, text1, WITH_BLANK);
