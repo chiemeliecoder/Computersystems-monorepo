@@ -1,8 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include<string.h>
 
+#include "polybius.h"
 
+//
+// Created by chiem on 1/23/2023.
+//
 
-#include "polycipher.h"
 
 int main(int argc, char const *argv[])
 {
