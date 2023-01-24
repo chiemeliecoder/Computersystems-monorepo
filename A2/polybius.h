@@ -19,4 +19,4 @@ char * generateTable();
 
 char * pbEncode(char *table, const char *plaintext, enum TEXT_TYPE type);
 
-char * decrypt(char *table, const char *ciphertext);
+char *  pbDecode(char *table, const char *ciphertext);
