@@ -21,8 +21,9 @@ int main(int argc, char const *argv[])
     table = generateTable();
     //printTable(table);
 
-    printf("table Encryption 1\n");
-    ciphertext1 = pbEncode(table, text1, WITH_BLANK);
+    printf("cipher");
+    scanf("-e %s",&text1);
+    ciphertext1 = encrypt(table, text1, WITH_BLANK);
     printf("original %s\n", text1);
     printf("ciphertext %s\n", ciphertext1);
 
