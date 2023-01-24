@@ -9,6 +9,8 @@
 // Created by chiem on 1/23/2023.
 //
 
+enum TEXT_TYPE { WITH_BLANK, NO_BLANK };
+
 
 static int  randomInt(int min, int max);
 static void printTable(char *table);
