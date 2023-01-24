@@ -17,6 +17,6 @@ static char getTableChar(int index, char *table);
 
 char * generateTable();
 
-char * encrypt(char *table, const char *plaintext, enum TEXT_TYPE type);
+char * pbEncode(char *table, const char *plaintext, enum TEXT_TYPE type);
 
 char * decrypt(char *table, const char *ciphertext);
