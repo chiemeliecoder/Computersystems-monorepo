@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
 
     printf("cipher");
     scanf("-e %s",&text1);
-    ciphertext1 = encrypt(table, text1, WITH_BLANK);
+    ciphertext1 = pbEncode(table, text1, WITH_BLANK);
     printf("original %s\n", text1);
     printf("ciphertext %s\n", ciphertext1);
 
