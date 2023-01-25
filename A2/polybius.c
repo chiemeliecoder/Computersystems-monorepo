@@ -71,21 +71,25 @@ char * pbEncode(char *table, const char *plaintext, enum TEXT_TYPE type)
     int count = 0, len = strlen(plaintext);
 
 
+    //Where to save the resulting array
     arr = (int *)malloc(len * sizeof(int));
     memset(arr, 0, len * sizeof(int));
 
     for (i = 0; i < len; i++)
     {
+        //get the corresponding table coordinates after the character is converted to uppercase
 
         index = getTableIndex(toupper(plaintext[i]), table);
 
 
+        //save coordinates
         if (index)
         {
             arr[count++] = index;
         }
     }
 
+    //save the ciphertext here
 
     ciphertext = (char *)malloc(count * 3 + 1);
     memset(ciphertext, 0, count * 3 + 1);
@@ -118,9 +122,10 @@ char * pbDecode(char *table, const char *ciphertext)
     tmpstr = (char *)malloc(len + 1);
     strcpy(tmpstr, ciphertext);
 
+    //this is where to save the decrypted string
 
     result = (char *)malloc(len / 3 + 1);
-    memset(result, 0, len / 3 + 1);
+    memset(result, 0, len / 3 + 1); //Initialize memory
 
     for (i = 0; i < (len - 1); i++) {
         num = 0;
