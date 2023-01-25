@@ -3,6 +3,8 @@
 #include<string.h>
 
 #include "queue.h"
+
+#define MAX_NUMBER_OF_PROCESS    7    //maximum processes
 //
 // Created by chiem on 1/24/2023.
 //
@@ -76,7 +78,7 @@ int main(void){
     printf("##########################\n");
     printf("#  Queue before Dequeue  #\n");
     printf("##########################\n");
-    printf(queue->tail->val);
+    printf(test1->tail->val);
 
     printf("\n");
     printf("##########################\n");
@@ -86,7 +88,7 @@ int main(void){
     for (int i=0;i<MAX_NUMBER_OF_PROCESS;i++) {
     process_t* dequeuedProcess =  dequeue(test1);
     printf("Dequeued %s .....\t", dequeuedProcess->name);
-    printf(queue->tail->val);
+    printf(test1->tail->val);
     }
 
     free(queue);
