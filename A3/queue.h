@@ -11,7 +11,7 @@
 
 struct process{
     unsigned int identifier;
-    char * name;
+    char *name;
     unsigned int priority;
 
 };
@@ -21,7 +21,7 @@ typedef struct process process_t;
 typedef struct node{
     struct node* next;
     struct node* prev;
-    void* val;
+    void *val;
 }node_t;
 
 
