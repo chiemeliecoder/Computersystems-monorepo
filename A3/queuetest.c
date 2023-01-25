@@ -15,7 +15,7 @@ int unitTest1(int status){
         p->head = p->tail = i;
         enqueue(test1,p);
         dequeue(test1);
-        printf("one node removed = (%i , %i), Size is %i\n", p->head, p->tail, test1->size);
+        printf("one node removed = (%d , %d), Size is %d\n", p->head, p->tail, test1->size);
     }
     
 
@@ -32,7 +32,7 @@ int unitTest2(int status){
         enqueue(test2,p);
         enqueue(test2,p);
         enqueue(test2,p);
-        printf("one node added = (%i , %i), Size is %i\n", p->head, p->tail, test2->size);
+        printf("one node added = (%d , %d), Size is %d\n", p->head, p->tail, test2->size);
     }
     
     //free_queue(test2);
