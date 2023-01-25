@@ -36,23 +36,25 @@ int main(int argc, char const *argv[])
     //printTable(table);
 
     printf("cipher");
-    scanf("-e %s",&text1);
-    ciphertext1 = pbEncode(table, text1, WITH_BLANK);
+    scanf("-e %s %s",&text1, &text2);
+    ciphertext1 = encrypt(table, text1, WITH_BLANK);
+    ciphertext2 = encrypt(table, text2, NO_BLANK);
     printf("original %s\n", text1);
     printf("ciphertext %s\n", ciphertext1);
+    printf("\ncipher-e\n");
+    printf("original %s\n", text2);
+    printf("ciphertext %s\n", ciphertext2);
+    
+    
 
-    printf("Decipher according to the table\n");
-    parsetext1 = pbDecode(table, ciphertext1);
+    
+    printf("\nDecipher-d\n");
+    parsetext1 = decrypt(table, ciphertext1);
     printf("result %s\n", parsetext1);
-
-//     printf("\ntable Encryption 2\n");
-//     ciphertext2 = pbEncode(table, text2, NO_BLANK);
-//     printf("original %s\n", text2);
-//     printf("ciphertext %s\n", ciphertext2);
-
-//     printf("Decipher according to the table\n");
-//     parsetext2 = pbDecode(table, ciphertext2);
-//     printf("result %s\n", parsetext2);
+    
+    printf("\nDecipher-d\n");
+    parsetext2 = decrypt(table, ciphertext2);
+    printf("result %s\n", parsetext2);
 
     free(table);
     free(ciphertext1);
