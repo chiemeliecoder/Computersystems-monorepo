@@ -10,7 +10,7 @@
 int unitTest1(int status){
     printf("========queue unitTest1========\n");
     queue_t* test1 = makeQueue();
-    for(int i = 1; i < =3; i++){
+    for(int i = 1; i <= 3; i++){
         struct queue *p = malloc(sizeof(*p));
         p->head = p->tail = i;
         enqueue(test1,p);
@@ -25,7 +25,7 @@ int unitTest1(int status){
 int unitTest2(int status){
     printf("========queue unitTest2========\n");
     queue_t* test2 = makeQueue();
-    for(int i = 1; i < =5; i++){
+    for(int i = 1; i <= 5; i++){
         struct queue *p = malloc(sizeof(*p));
         enqueue(test2,p);
         enqueue(test2,p);
