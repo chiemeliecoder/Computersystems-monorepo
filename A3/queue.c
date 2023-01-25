@@ -148,7 +148,18 @@ void* dequeue(queue_t* queue){
     return res;
 
 }
+
 process_t* dequeueProcess(queue_t* queue){
+    //Define a function process_t* dequeueProcess(queue_t* queue) (done)
+    // that removes and returns the process with the highest priority in the queue.
+    //Note that we are presuming process_t types for this function but not the others.
+    node_t *temp;
+    process_t* n = queue->head->val;
+    temp = head;
+    head = queue->head->next;
+    temp->val = head;
+    free(temp);
+    return n;
 
 }
 
