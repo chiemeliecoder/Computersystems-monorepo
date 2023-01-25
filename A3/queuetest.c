@@ -9,7 +9,7 @@
 
 int unitTest1(int status){
     printf("========queue unitTest1========\n");
-    queue_t* test1 = makeQueue(1);
+    queue_t* test1 = makeQueue();
     enqueue(test1,1);
     dequeue(test1);
 
@@ -18,12 +18,12 @@ int unitTest1(int status){
 }
 int unitTest2(int status){
     printf("========queue unitTest2========\n");
-    queue_t*test7 = makeQueue(5);
-    enqueue(test7,1);
-    enqueue(test7,2);
-    enqueue(test7,3);
-    enqueue(test7,4);
-    enqueue(test7,5);
+    queue_t* test2 = makeQueue();
+    enqueue(test2,1);
+    enqueue(test2,2);
+    enqueue(test2,3);
+    enqueue(test2,4);
+    enqueue(test2,5);
     //free_queue(test7);
     return 1;
 }
