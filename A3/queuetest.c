@@ -56,7 +56,7 @@ int main(void){
     printf("##########################\n");
     printf("#  Queue before Enqueue  #\n");
     printf("##########################\n");
-    printf(test1->size);
+    printf(test1->tail->val);
 
     printf("\n");
     printf("##########################\n");
@@ -78,7 +78,7 @@ int main(void){
     printf("##########################\n");
     printf("#  Queue before Dequeue  #\n");
     printf("##########################\n");
-    printf(test1->tail->val);
+    printf(test1->head->val);
 
     printf("\n");
     printf("##########################\n");
