@@ -44,14 +44,14 @@ int main(int argc, char const *argv[])
     parsetext1 = pbDecode(table, ciphertext1);
     printf("result %s\n", parsetext1);
 
-    printf("\ntable Encryption 2\n");
-    ciphertext2 = pbEncode(table, text2, NO_BLANK);
-    printf("original %s\n", text2);
-    printf("ciphertext %s\n", ciphertext2);
+//     printf("\ntable Encryption 2\n");
+//     ciphertext2 = pbEncode(table, text2, NO_BLANK);
+//     printf("original %s\n", text2);
+//     printf("ciphertext %s\n", ciphertext2);
 
-    printf("Decipher according to the table\n");
-    parsetext2 = pbDecode(table, ciphertext2);
-    printf("result %s\n", parsetext2);
+//     printf("Decipher according to the table\n");
+//     parsetext2 = pbDecode(table, ciphertext2);
+//     printf("result %s\n", parsetext2);
 
     free(table);
     free(ciphertext1);
