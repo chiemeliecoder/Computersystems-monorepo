@@ -56,7 +56,7 @@ int main(void){
     printf("##########################\n");
     printf("#  Queue before Enqueue  #\n");
     printf("##########################\n");
-    printf(test1->size);
+    printf("the size of queue: %s\n", test1->size);
 
     printf("\n");
     printf("##########################\n");
@@ -78,7 +78,8 @@ int main(void){
     printf("##########################\n");
     printf("#  Queue before Dequeue  #\n");
     printf("##########################\n");
-    printf(test1->head->val);
+    //printf(test1->head->val);
+    printf("the size of queue: %s\n", test1->size);
 
     printf("\n");
     printf("##########################\n");
@@ -88,7 +89,7 @@ int main(void){
     for (int i=0;i<MAX_NUMBER_OF_PROCESS;i++) {
     process_t* dequeuedProcess =  dequeue(test1);
     printf("Dequeued %s .....\t", dequeuedProcess->name);
-    printf(test1->head->val);
+    printf("the size of queue: %s\n", test1->size);
     }
 
     free(test1);
