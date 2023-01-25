@@ -25,19 +25,24 @@ int main(int argc, char const *argv[])
 //     }
     
     char *table;
-    char *text1[1000];
+    char *text1[1000]; //array to store string
+    char *text2[1000];
 //     char *text1 = "hello world",
 //             *text2 = "Glad to meet you, polybius cipher.";
     char *ciphertext1, *parsetext1,
-            *ciphertext2, *parsetext2;
+            *ciphertext2, *parsetext2; //pass the ciphered text and  to decipher the text that is a = 44 ciphered text is 44 and parsetext becomes a
 
-    printf("Randomly generate a table:\n");
+    //table generated
+    printf("Generate a table:\n");
     table = generateTable();
     //printTable(table);
 
+    //text is ciphered 
+    //please write in the command lined after cipher is printed out -e the the two text i.e cipher-e hello world
+    //the ciphered text would be printed out
     printf("cipher");
     scanf("-e %s %s",&text1, &text2);
-    ciphertext1 = encrypt(table, text1, WITH_BLANK);
+    ciphertext1 = encrypt(table, text1, NO_BLANK);
     ciphertext2 = encrypt(table, text2, NO_BLANK);
     printf("original %s\n", text1);
     printf("ciphertext %s\n", ciphertext1);
@@ -47,6 +52,7 @@ int main(int argc, char const *argv[])
     
     
 
+    //turning the ciphered text back to its original state is done below
     
     printf("\nDecipher-d\n");
     parsetext1 = decrypt(table, ciphertext1);
