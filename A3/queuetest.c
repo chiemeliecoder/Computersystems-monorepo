@@ -19,7 +19,7 @@ int unitTest1(int status){
     }
     
 
-    //free_queue(test1);
+    free(test1);
     return 1;
 }
 int unitTest2(int status){
@@ -35,7 +35,7 @@ int unitTest2(int status){
         printf("one node added = (%d , %d), Size is %d\n", p->head, p->tail, test2->size);
     }
     
-    //free_queue(test2);
+    free(test2);
     return 1;
 }
 int unitTest3(int status){}
