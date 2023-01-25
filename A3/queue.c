@@ -56,11 +56,11 @@
 //
 //typedef struct process process_t;
 
-typedef struct node{
-    node_t *next;
-    node_t *prev;
-    void *val;
-}node_t;
+// typedef struct node{
+//     node_t *next;
+//     node_t *prev;
+//     void *val;
+// }node_t;
 
 
 
