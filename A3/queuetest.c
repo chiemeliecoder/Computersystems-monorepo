@@ -56,7 +56,7 @@ int main(void){
     printf("##########################\n");
     printf("#  Queue before Enqueue  #\n");
     printf("##########################\n");
-    printf(test1->tail->val);
+    printf(test1->size);
 
     printf("\n");
     printf("##########################\n");
