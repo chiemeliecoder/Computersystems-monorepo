@@ -25,8 +25,9 @@ int main(int argc, char const *argv[])
 //     }
     
     char *table;
-    char *text1 = "hello world",
-            *text2 = "Glad to meet you, polybius cipher.";
+    char *text1[1000];
+//     char *text1 = "hello world",
+//             *text2 = "Glad to meet you, polybius cipher.";
     char *ciphertext1, *parsetext1,
             *ciphertext2, *parsetext2;
 
