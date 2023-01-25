@@ -25,12 +25,17 @@ int unitTest1(int status){
 int unitTest2(int status){
     printf("========queue unitTest2========\n");
     queue_t* test2 = makeQueue();
-    enqueue(test2,1);
-    enqueue(test2,2);
-    enqueue(test2,3);
-    enqueue(test2,4);
-    enqueue(test2,5);
-    //free_queue(test7);
+    for(int i = 1; i < =5; i++){
+        struct queue *p = malloc(sizeof(*p));
+        enqueue(test2,p);
+        enqueue(test2,p);
+        enqueue(test2,p);
+        enqueue(test2,p);
+        enqueue(test2,p);
+        printf("one node added = (%i , %i), Size is %i\n", p->head, p->tail, test2->size);
+    }
+    
+    //free_queue(test2);
     return 1;
 }
 int unitTest3(int status){}
