@@ -42,8 +42,8 @@ int main(int argc, char const *argv[])
     //the ciphered text would be printed out
     printf("cipher");
     scanf("-e %s %s",&text1, &text2);
-    ciphertext1 = encrypt(table, text1, NO_BLANK);
-    ciphertext2 = encrypt(table, text2, NO_BLANK);
+    ciphertext1 = pbEncode(table, text1, NO_BLANK);
+    ciphertext2 = pbEncode(table, text2, NO_BLANK);
     printf("original %s\n", text1);
     printf("ciphertext %s\n", ciphertext1);
     printf("\ncipher-e\n");
@@ -55,11 +55,11 @@ int main(int argc, char const *argv[])
     //turning the ciphered text back to its original state is done below
     
     printf("\nDecipher-d\n");
-    parsetext1 = decrypt(table, ciphertext1);
+    parsetext1 = pbDecode(table, ciphertext1);
     printf("result %s\n", parsetext1);
     
     printf("\nDecipher-d\n");
-    parsetext2 = decrypt(table, ciphertext2);
+    parsetext2 = pbDecode(table, ciphertext2);
     printf("result %s\n", parsetext2);
 
     free(table);
