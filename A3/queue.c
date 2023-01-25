@@ -92,7 +92,7 @@ int enqueue(queue_t* queue, void* element){
     if(newNode == NULL){
         return -1;
     }
-    newNode->val = value;
+    newNode->val = element;
 
     if(queue->size == 0){ //queue empty
         newNode->next = newNode;
