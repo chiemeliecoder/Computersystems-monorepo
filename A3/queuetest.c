@@ -10,8 +10,14 @@
 int unitTest1(int status){
     printf("========queue unitTest1========\n");
     queue_t* test1 = makeQueue();
-    enqueue(test1,1);
-    dequeue(test1);
+    for(int i = 1; i < =3; i++){
+        struct queue *p = malloc(sizeof(*p));
+        p->head = p->tail = i;
+        enqueue(test1,p);
+        dequeue(test1);
+        printf("one node removed = (%i , %i), Size is %i\n", p->head, p->tail, test1->size);
+    }
+    
 
     //free_queue(test1);
     return 1;
