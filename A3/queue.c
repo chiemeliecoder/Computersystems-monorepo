@@ -156,7 +156,7 @@ process_t* dequeueProcess(queue_t* queue){
     node_t *temp;
     process_t* n = queue->head->val;
     temp = queue->head;
-    head = queue->head->next;
+    queue->head = queue->head->next;
     temp->val = queue->head;
     free(temp);
     return n;
