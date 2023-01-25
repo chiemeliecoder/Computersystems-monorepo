@@ -71,6 +71,7 @@ int main(void){
     sprintf(p->name, "Process%d", i);
     enqueue(test1, p);
     printf("Enqueued %s .....\t", p->name);
+    printf("the size of queue: %s\n", test1->size);
     //display(queue->data);
     }
 
@@ -78,8 +79,8 @@ int main(void){
     printf("##########################\n");
     printf("#  Queue before Dequeue  #\n");
     printf("##########################\n");
-    //printf(test1->head->val);
-    printf("the size of queue: %s\n", test1->size);
+    printf(test1->head->val);
+    //printf("the size of queue: %s\n", test1->size);
 
     printf("\n");
     printf("##########################\n");
