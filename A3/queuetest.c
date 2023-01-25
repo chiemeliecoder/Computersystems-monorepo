@@ -91,7 +91,7 @@ int main(void){
     printf(test1->tail->val);
     }
 
-    free(queue);
+    free(test1);
     return 0;
 //     unsigned int testsPassed = 0;
 //     // List of Unit Tests to test your data structure
