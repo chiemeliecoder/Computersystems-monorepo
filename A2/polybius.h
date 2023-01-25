@@ -17,8 +17,11 @@ static void printTable(char *table);
 static int  getTableIndex(char a, char *table);
 static char getTableChar(int index, char *table);
 
+//generate the table
 char * generateTable();
 
+//encoding the inputed word
 char * pbEncode(char *table, const char *plaintext, enum TEXT_TYPE type);
 
+//decoding the word encoded
 char *  pbDecode(char *table, const char *ciphertext);
