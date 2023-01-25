@@ -31,8 +31,9 @@ int unitTest3(int status){}
 int unitTest4(int status){}
 
 int (*unitTests[])(int)={
-        unitTest1;
-        NULL;
+        unitTest1,
+        unitTest2,
+        NULL
 };
 
 int main(){
