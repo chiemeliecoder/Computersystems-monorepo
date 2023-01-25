@@ -28,8 +28,8 @@ typedef struct node{
 
 
 struct queue{
-    struct node_t* head; // Current 'head' of the queue
-    struct node_t* tail; // The next free position in the queue
+    struct node* head; // Current 'head' of the queue
+    struct node* tail; // The next free position in the queue
     int size; // How many total elements we currently have enqueued.
 };
 
