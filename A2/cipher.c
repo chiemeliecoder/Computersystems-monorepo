@@ -40,7 +40,7 @@ int main(int argc, char const *argv[])
     //text is ciphered 
     //please write in the command lined after cipher is printed out -e the the two text i.e cipher-e hello world
     //the ciphered text would be printed out
-    printf("cipher");
+    printf("\ncipher");
     scanf("-e %s %s",&text1, &text2);
     ciphertext1 = pbEncode(table, text1, NO_BLANK);
     ciphertext2 = pbEncode(table, text2, NO_BLANK);
