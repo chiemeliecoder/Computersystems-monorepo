@@ -53,6 +53,12 @@ queue_t *makeQueue() {
     queue->size = 0;
     return queue;
 }
+//check if the queue is empty
+
+int isempty(queue_t *queue)
+{
+    return (queue->tail == NULL);
+}
 
 
 //It is a function enqueue(queue_t* queue, void* element) that can adds element to the end of the queue.
