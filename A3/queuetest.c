@@ -71,7 +71,7 @@ int main(void){
     sprintf(p->name, "Process%d", i);
     enqueue(test1, p);
     printf("Enqueued %s .....\t", p->name);
-    printdata(test1->head->val);
+    printdata(test1->val);
     }
 
     printf("\n");
