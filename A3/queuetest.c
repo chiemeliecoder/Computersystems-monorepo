@@ -27,13 +27,13 @@ int main(void){
 
     process_t process[MAX_NUMBER_OF_PROCESS];
     for (int i=0;i<MAX_NUMBER_OF_PROCESS;i++) {
-    process_t *p = &process[i];
-    p->identifier = i;
-    p->name = malloc(sizeof(*p->name)*9);
-    sprintf(p->name, "Process%d", i);
-    enqueue(test1, p);
-    printf("Enqueued %s .....\t", p->name);
-    printdata(test1->head->val);
+        process_t *p = &process[i];
+        p->identifier = i;
+        p->name = malloc(sizeof(*p->name)*9);
+        sprintf(p->name, "Process%d", i);
+        enqueue(test1, p);
+        printf("Enqueued %s .....\t", p->name);
+        printdata(test1->head->val);
     }
 
     printf("\n");
