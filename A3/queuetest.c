@@ -51,10 +51,10 @@ int main(void){
     printf("##########################\n");
 
     for (int i=0;i<MAX_NUMBER_OF_PROCESS;i++) {
-    process_t* dequeuedProcess =  dequeue(test1);
-    printf("Dequeued %s .....\t", dequeuedProcess->name);
-    printf("\nthe size of queue: %d\n", test1->size);
-    printdata(test1->head->val);
+        process_t* dequeuedProcess =  dequeue(test1);
+        printf("Dequeued %s .....\t", dequeuedProcess->name);
+        printf("\nthe size of queue: %d\n", test1->size);
+        printdata(test1->head->val);
     }
 
     free(test1);
