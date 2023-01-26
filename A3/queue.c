@@ -151,11 +151,12 @@ void* dequeue(queue_t* queue){
 
 void printdata(node_t* head)
 {
+    process_t *p = head;
     if (head == NULL) {
         printf("NULL\n");
     }
     else {
-        printf("%s->", head->val->name);
+        printf("%s->", p->name);
         printdata(head->next);
     }
 }
