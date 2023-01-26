@@ -10,6 +10,6 @@
  */
 
 
-double mpg2kml(double* mpg);
-double mpg2lphm(double* mpg);
-double kml2mpg(double* kpl);
+double mpg2kml(double* mpg); //a function that that takes miles per gallon as an argument and returns the equivalent kilometers per liter.
+double mpg2lphm(double* mpg); //a function that takes miles per gallon as an argument and returns the equivalent number of liter per 100 kilometers
+double kml2mpg(double* kpl); //a function that takes the kilometers per liter and returns miles per gallon
