@@ -149,6 +149,17 @@ void* dequeue(queue_t* queue){
 
 }
 
+void printdata(node_t *head)
+{
+    if (head == NULL) {
+        printf("NULL\n");
+    }
+    else {
+        printf("%s->", head->val->name);
+        printdata(head->next);
+    }
+}
+
 process_t* dequeueProcess(queue_t* queue){
     //Define a function process_t* dequeueProcess(queue_t* queue) (done)
     // that removes and returns the process with the highest priority in the queue.
