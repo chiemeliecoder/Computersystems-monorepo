@@ -59,30 +59,19 @@ queue_t *makeQueue() {
 //You may implement the queue as a linked list or as an array
 
 
-int enqueue(queue_t* queue, void* element){
-    struct node *newNode = (struct node*)malloc(sizeof(struct node)); //allocate memeory for a new node
-    if(newNode == NULL){
-        return -1;
+void enqueue(queue_t *queue, void *element)
+{
+    node_t *temp;
+    temp = (node_t *) malloc(sizeof(*temp));
+    temp->p = element;
+    temp->next = NULL;
+    if (!isempty(queue)) {
+        queue->tail->next = temp;
+        queue->tail = temp;
     }
-    newNode->val = element;
-
-    if(queue->size == 0){ //queue empty
-        newNode->next = newNode;
-        newNode->prev = newNode;
-        queue->head = newNode;
-        queue->tail = newNode;
-
-    }else{
-        newNode->next = queue->tail;
-        newNode->prev = queue->head;
-        queue->tail->prev = newNode;
-        queue->head->next = newNode;
-        queue->tail = newNode;
+    else {
+        queue->data = queue->head = queue->tail = temp;
     }
-    queue->size++;
-
-    return 0;
-
 }
 
 
