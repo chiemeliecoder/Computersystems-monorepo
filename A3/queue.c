@@ -126,7 +126,7 @@ process_t* dequeueProcess(queue_t* queue){
     // that removes and returns the process with the highest priority in the queue.
     //Note that we are presuming process_t types for this function but not the others.
     node_t *temp;
-    process_t* n = queue->head->val;
+    process_t* n = queue->head->p;
     temp = queue->head;
     queue->head = queue->head->next;
     temp->val = queue->head;
