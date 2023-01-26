@@ -33,7 +33,7 @@ int main(void){
     sprintf(p->name, "Process%d", i);
     enqueue(test1, p);
     printf("Enqueued %s .....\t", p->name);
-    printdata(test1->tail->val);
+    printdata(test1->head->next->val);
     }
 
     printf("\n");
