@@ -26,6 +26,7 @@ int main(void){
     printf("##########################\n");
 
     process_t process[MAX_NUMBER_OF_PROCESS];
+    
     for (int i=0;i<MAX_NUMBER_OF_PROCESS;i++) {
         process_t *p = &process[i];
         p->identifier = i;
