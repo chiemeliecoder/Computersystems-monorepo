@@ -53,11 +53,7 @@ void unitTest5(){
     void * b = NULL; //this is null pointer to convert string into null and give us a warning of an incorrect input.
     void *c = (void *) &str; //creating c in str address
     c = b; //pouring null pointer into c
-    // void* b = &str;
-    //void* b = NULL;
-    
-    // void* a = str;
-    // printf("v: %s\n", c);
+   
     
    
     // printf("value: %lf\n", (void*)c);
