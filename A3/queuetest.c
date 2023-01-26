@@ -33,7 +33,7 @@ int main(void){
     sprintf(p->name, "Process%d", i);
     enqueue(test1, p);
     printf("Enqueued %s .....\t", p->name);
-    printdata(test1->head->next->val);
+    printdata(test1->head->val);
     }
 
     printf("\n");
@@ -59,14 +59,5 @@ int main(void){
 
     free(test1);
     return 0;
-//     unsigned int testsPassed = 0;
-//     // List of Unit Tests to test your data structure
-//     int counter =0;
-//     while(unitTests[counter]!=NULL){
-//         unitTests[counter](1);
-//         counter++;
-//     }
-
-//     return 0;
 }
 
