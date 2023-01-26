@@ -9,6 +9,9 @@
  *Spring2023/Jan192023
  */
 
+//created a function that that takes miles per gallon as an argument and returns the equivalent kilometers per liter.
+//results are in doubles
+
 double mpg2kml(double* mpg){
     char *str = (char *) &mpg;
     double c = 0.425144;
@@ -24,6 +27,9 @@ double mpg2kml(double* mpg){
 	return kpl;
 }
 
+//created a function that takes miles per gallon as an argument and returns the equivalent number of liter per 100 kilometers.
+//results are in doubles
+
 double mpg2lphm(double* mpg){
     char *str = (char *) &mpg;
     double c = 235.215;
@@ -37,6 +43,8 @@ double mpg2lphm(double* mpg){
 	return lpk;
 }
 
+//created a function that takes the kilometers per liter and returns miles per gallon
+//results are in doubles
 double kml2mpg(double* kpl){
     char *str = (char *) &kpl;
     double c = 2.35215;
