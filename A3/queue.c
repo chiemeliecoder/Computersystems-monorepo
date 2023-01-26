@@ -109,6 +109,8 @@ void* dequeue(queue_t* queue){
 
 }
 
+//prints the process for the enqueue and dequeue process
+
 void printdata(node_t* head)
 {
     //process_t *p = head;
