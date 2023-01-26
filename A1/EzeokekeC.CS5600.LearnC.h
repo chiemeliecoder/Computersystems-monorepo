@@ -10,6 +10,6 @@
  */
 
 
-double mpg2kml(double* mpg)
-double mpg2lphm(double* mpg)
-double kml2mpg(double* kpl)
+double mpg2kml(double* mpg);
+double mpg2lphm(double* mpg);
+double kml2mpg(double* kpl);
