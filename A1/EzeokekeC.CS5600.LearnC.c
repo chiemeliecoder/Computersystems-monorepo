@@ -13,7 +13,7 @@ double mpg2kml(double* mpg){
     char *str = (char *) &mpg;
     double c = 0.425144;
     double* convert = &c;
-    if(mpg < 0 || mpg == NULL || mpg == str ){
+    if(mpg < 0 || mpg == NULL || (void * )mpg == (void * )str ){
         printf("Wrong input try numbers greater than 0: ");
         return -1;
     }
@@ -28,7 +28,7 @@ double mpg2lphm(double* mpg){
     char *str = (char *) &mpg;
     double c = 235.215;
     double* convert = &c;
-    if(mpg < 0 || mpg == NULL || mpg == str ){
+    if(mpg < 0 || mpg == NULL || (void * )mpg == (void * )str ){
         printf("Wrong input try numbers greater than 0: ");
         return -1;
     }
@@ -41,7 +41,7 @@ double kml2mpg(double* kpl){
     char *str = (char *) &kpl;
     double c = 2.35215;
     double* convert = &c;
-    if(kpl < 0 || kpl == NULL || kpl == str){
+    if(kpl < 0 || kpl == NULL || (void * )kpl == (void * )str){
         printf("Wrong input try numbers greater than 0: ");
         return -1;
     }
