@@ -54,7 +54,7 @@ int main(void){
 
     for (int i=0;i<MAX_NUMBER_OF_PROCESS;i++) {
         process_t* dequeuedProcess = dequeue(test1); 
-        printf("Dequeued %s .....\t", dequeuedProcess->name);
+        printf("Dequeued %s .....\t", dequeueProcess->name);
         printdata(test1->data);
     }
 
