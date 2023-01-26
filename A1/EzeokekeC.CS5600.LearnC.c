@@ -21,7 +21,7 @@ double mpg2kml(double* mpg){
         return -1;
     }
     
-	double kpl;
+	double kpl; // kilometers per liter
 	kpl = ((*mpg) * (*convert))/1;
 
 	return kpl;
@@ -38,7 +38,7 @@ double mpg2lphm(double* mpg){
         printf("Wrong input try numbers greater than 0: ");
         return -1;
     }
-	double lpk;
+	double lpk; //liter per 100 kilometers
 	lpk = (*convert)/(*mpg);
 	return lpk;
 }
@@ -53,7 +53,7 @@ double kml2mpg(double* kpl){
         printf("Wrong input try numbers greater than 0: ");
         return -1;
     }
-	double mpg;
+	double mpg; //miles per gallon
 	
 	mpg = ((*kpl) * (*convert))/1;
 	
