@@ -9,6 +9,11 @@
 // Created by chiem on 1/24/2023.
 //
 
+//Defined a type process_t that represents a process that has both an identifier (int),
+//a name (char *), and a priority (int). Implement this as a struct.
+// (typedef called process_t) inside has a int identifier and a char *name and int priority)
+//implement a struct
+
 struct process{
     unsigned int identifier;
     char *name;
@@ -17,6 +22,8 @@ struct process{
 };
 
 typedef struct process process_t;
+
+
 
 typedef struct node{
     struct node* next;
