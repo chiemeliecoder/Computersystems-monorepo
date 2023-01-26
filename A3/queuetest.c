@@ -42,8 +42,8 @@ int main(void){
     printf("##########################\n");
     printf("#  Queue before Dequeue  #\n");
     printf("##########################\n");
-    printf("the size of queue: %d\n", test1->size);
-    printdata(test1->head->val);
+    printf("the size of queue: %d\n", sizeof(test1));
+    printdata(test1->data);
     
  
 
