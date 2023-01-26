@@ -42,12 +42,20 @@ void unitTest4(){
 
 void unitTest5(){
     char str[100] = "hello";
-    char* b = &str;
-    double* a = &b;
-    printf("value: %f\n", a);
-    printf("miles per gallon to kilometer per litre: %lf\n",mpg2kml(a));
-    printf("miles per gallon to litre per 100 kilometers: %lf\n",mpg2lphm(a));
-    printf("kilometer per liter to miles per gallon: %lf\n",kml2mpg(a));
+    void* b = NULL;
+    void *c = (void *) &str;
+    c = b;
+    // void* b = &str;
+    //void* b = NULL;
+    
+    // void* a = str;
+    // printf("v: %s\n", c);
+    
+   
+    // printf("value: %lf\n", (void*)c);
+    printf("miles per gallon to kilometer per litre: %lf\n",mpg2kml(c));
+    printf("miles per gallon to litre per 100 kilometers: %lf\n",mpg2lphm(c));
+    printf("kilometer per liter to miles per gallon: %lf\n",kml2mpg(c));
 }
 
 int main(){
