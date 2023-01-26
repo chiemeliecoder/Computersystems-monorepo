@@ -54,3 +54,4 @@ void* dequeue(queue_t* queue);
 process_t* dequeueProcess(queue_t* queue);
 int qsize(queue_t* queue);
 void printdata(node_t *head);
+int isempty(queue_t *queue)
