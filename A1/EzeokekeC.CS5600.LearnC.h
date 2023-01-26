@@ -10,6 +10,6 @@
  */
 
 
-int mpg2kml(int mpg);
+double mpg2kml(double* mpg)
 int mpg2lphm(int mpg);
 int kml2mpg(int kpl);
