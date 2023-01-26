@@ -116,7 +116,7 @@ void printdata(node_t* head)
         printf("NULL\n");
     }
     else {
-        printf("%s->", p->name);
+        printf("%s->", head->p->name);
         printdata(head->next);
     }
 }
