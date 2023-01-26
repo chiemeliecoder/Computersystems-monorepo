@@ -42,7 +42,7 @@ void unitTest4(){
 
 void unitTest5(){
     char str[100] = "hello";
-    void* b = NULL;
+    void * b = NULL;
     void *c = (void *) &str;
     c = b;
     // void* b = &str;
