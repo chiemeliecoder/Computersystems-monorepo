@@ -80,7 +80,7 @@ int main(void){
     printf("##########################\n");
     printf("the size of queue: %d\n", test1->size);
     printdata(test1->head->val);
-    printdata(test1->head->next->val);
+    printdata(test1->head->next);
     
  
 
