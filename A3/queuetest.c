@@ -78,9 +78,10 @@ int main(void){
     printf("##########################\n");
     printf("#  Queue before Dequeue  #\n");
     printf("##########################\n");
-    //printf(test1->head->val);
     printf("the size of queue: %d\n", test1->size);
     printdata(test1->head->val);
+    printdata(test1->head->next->val);
+    
  
 
     printf("\n");
