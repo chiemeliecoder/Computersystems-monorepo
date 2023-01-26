@@ -12,7 +12,7 @@
 //Defined a type process_t that represents a process that has both an identifier (int),
 //a name (char *), and a priority (int). Implement this as a struct.
 // (typedef called process_t) inside has a int identifier and a char *name and int priority)
-//implement a struct
+//implemented a struct
 
 struct process{
     unsigned int identifier;
@@ -24,7 +24,8 @@ struct process{
 typedef struct process process_t;
 
 
-
+//Defined a type node_t that represents a node
+//(the val in the node must be of type void *)
 typedef struct node{
     struct node* next;
     struct node* prev;
@@ -32,6 +33,9 @@ typedef struct node{
 }node_t;
 
 
+//Defined a type queue_t that represents a queue that can hold anything
+//(Hint: the data in the node must be of type void *).
+// Implemented this as a struct.
 
 
 struct queue{
