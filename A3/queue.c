@@ -31,51 +31,19 @@
 //typedef struct queue process_t;
 
 
-//Define a function enqueue(queue_t* queue, void* element) that can adds element to the end of the queue.
-//You may implement the queue as a linked list or as an array.
 
-//If you implement it as a linked list then you might want to add forward (and perhaps backward) pointers to the queue_t structure defined above.
-//Define a function void* dequeue(queue_t* queue) that removes and
-//returns the data within the element at the front of the queue.
 
 //Define a function process_t* dequeueProcess(queue_t* queue) that removes
 //and returns the process with the highest priority in the queue.
 //Note that we are presuming process_t types for this function but not the others.
 
-//Define a function int qsize(queue_t* queue) that returns the number of elements in the queue;
-//0 if the queue is empty.
 
 
 
-//struct process{
-//    unsigned int identifier;
-//    char * name;
-//    unsigned int priority;
-//
-//};
-//
-//typedef struct process process_t;
-
-// typedef struct node{
-//     node_t *next;
-//     node_t *prev;
-//     void *val;
-// }node_t;
-
-
-
-//struct queue{
-//    struct node_t *head; // Current 'head' of the queue
-//    struct node_t *tail; // The next free position in the queue
-//    int size; // How many total elements we currently have enqueued.
-//    unsigned int capacity;  // Maximum number of items the queue can hold
-//    int* data; 		          // The 'integer' data our queue holds
-//};
-//
-//typedef struct queue queue_t;
+//created a queue
 
 queue_t *makeQueue() {
-    queue_t *queue = (queue_t *)malloc(sizeof (queue_t));
+    queue_t *queue = (queue_t *)malloc(sizeof (queue_t)); //allocate memeory for a queue
     if (queue == NULL) {
         fprintf(stderr, "Out of memory\n");
         exit(1);
@@ -87,8 +55,12 @@ queue_t *makeQueue() {
 }
 
 
+//It is a function enqueue(queue_t* queue, void* element) that can adds element to the end of the queue.
+//You may implement the queue as a linked list or as an array
+
+
 int enqueue(queue_t* queue, void* element){
-    struct node *newNode = (struct node*)malloc(sizeof(struct node));
+    struct node *newNode = (struct node*)malloc(sizeof(struct node)); //allocate memeory for a new node
     if(newNode == NULL){
         return -1;
     }
@@ -115,16 +87,9 @@ int enqueue(queue_t* queue, void* element){
 
 
 
-//void enqueue(queue_t* queue, node_t element){
-//    if (queue->tail == NULL) { // queue is empty
-//        queue->head = element.val;
-//    } else { // queue not empty
-//        queue->tail->next = element.val;
-//    }
-//    queue->tail = new_node;
-//    queue->size++;
-//
-//}
+//Implemented a linked list then added a forward (and perhaps backward) pointers to the queue_t structure defined above.
+//Define a function void* dequeue(queue_t* queue) that removes and
+//returns the data within the element at the front of the queue.
 
 
 
@@ -162,7 +127,7 @@ void printdata(node_t* head)
 }
 
 process_t* dequeueProcess(queue_t* queue){
-    //Define a function process_t* dequeueProcess(queue_t* queue) (done)
+    //it is a function process_t* dequeueProcess(queue_t* queue)
     // that removes and returns the process with the highest priority in the queue.
     //Note that we are presuming process_t types for this function but not the others.
     node_t *temp;
@@ -175,10 +140,8 @@ process_t* dequeueProcess(queue_t* queue){
 
 }
 
-//int qempty(queue_t* queue){
-//
-//    return 0;
-//}
+//It is a function int qsize(queue_t* queue) that returns the number of elements in the queue;
+//0 if the queue is empty.
 
 int qsize(queue_t* queue){
     if(queue->head == NULL){
