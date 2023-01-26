@@ -81,7 +81,7 @@ int main(void){
     //printf(test1->head->val);
     printf("the size of queue: %d\n", test1->size);
     printdata(test1->head->val);
-    printdata(test1->tail->val);
+ 
 
     printf("\n");
     printf("##########################\n");
@@ -92,6 +92,7 @@ int main(void){
     process_t* dequeuedProcess =  dequeue(test1);
     printf("Dequeued %s .....\t", dequeuedProcess->name);
     printf("the size of queue: %d\n", test1->size);
+    printdata(test1->head->val);
     }
 
     free(test1);
