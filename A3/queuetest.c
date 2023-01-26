@@ -81,6 +81,7 @@ int main(void){
     //printf(test1->head->val);
     printf("the size of queue: %d\n", test1->size);
     printdata(test1->head->val);
+    printdata(test1->tail->val);
 
     printf("\n");
     printf("##########################\n");
