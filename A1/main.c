@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include "EzeokekeC.CS5600.LearnC.h"
 
+/*Ezeoekeke.c/ Assignment1
+ *
+ *Ezeokeke Chiemelie/ CS5600 /Northeastern University
+ *
+ *Spring2023/Jan192023
+ */
+
 void unitTest1(){
     int a = 20;
     printf("miles per gallon to kilometer per litre: %d\n",mpg2kml(a));
