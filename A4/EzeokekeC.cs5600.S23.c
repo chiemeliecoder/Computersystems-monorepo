@@ -174,5 +174,8 @@ int main(int argc, char **argv){
  *
  * Provide a short explanation of the phenomena that you see. You do not have to resolve the problem,
  * but only explain what the problem is and what it's resolution might require.
+ * The phenomena I experienced was a data race. Data races are a common problem in multithreaded programming. 
+ * Data races occur when multiple tasks or threads access a shared resource without sufficient protections, leading to undefined or unpredictable behavior
+ * My threads had unexplainable behavoirs like the thread ID changed for X Y when it was ran so many times. That is when it compiled the ID changed every time.
  **/
 
