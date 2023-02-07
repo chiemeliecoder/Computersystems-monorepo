@@ -1,9 +1,9 @@
 #include <stdio.h>  
 #include <stdlib.h> 
 #include <sys/types.h> 
-#include <unistd.h>,  
+#include <unistd.h>  
 
-#include <process.h>
+//#include <process.h>
 
 void main() { 	 
 
