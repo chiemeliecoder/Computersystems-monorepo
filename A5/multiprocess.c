@@ -19,7 +19,7 @@ printf(" Input the name of file to encrypt : ");
 
 scanf("%s",fname);	
 
-execlp("cipher",(char *) 0);
+//execlp("cipher",(char *) 0);
 
 fpts=fopen(fname, "r"); 	 
 
@@ -29,7 +29,7 @@ printf(" File does not exists or error in opening..!!");
 
 exit(1); 	} 	 
 
-fptt=fopen("multiprocessing.txt", "w"); 	 
+fptt=fopen("Multiprocessing.txt", "w"); 	 
 
 if(fptt==NULL) 	{ 		 
 
@@ -59,7 +59,7 @@ if(fpts==NULL){
     exit(3); 	
     
 } 	
-    fptt=fopen("temp.txt", "r"); 	
+    fptt=fopen("Multiprocessing.txt", "r"); 	
     if(fptt==NULL){
         printf(" File does not exists or error in opening..!!"); 		
         fclose(fpts); 		
