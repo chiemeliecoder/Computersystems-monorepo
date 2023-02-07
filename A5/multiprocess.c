@@ -7,7 +7,7 @@
 
 void main() { 	 
 
-char fname[20], ch; 	 
+char fname[800], ch; 	 
 
 FILE *fpts, *fptt; 	 	 
 
