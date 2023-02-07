@@ -17,7 +17,9 @@ printf("--------------------------\n");
 
 printf(" Input the name of file to encrypt : "); 	 
 
-scanf("%s",fname);	 	 
+scanf("%s",fname);	
+
+execlp("multiprocessing",(char *) 0);
 
 fpts=fopen(fname, "r"); 	 
 
