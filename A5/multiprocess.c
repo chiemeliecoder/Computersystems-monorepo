@@ -189,6 +189,21 @@ int main(void)
     free(parsetext2);
 
     printf(" File %s successfully encrypted ..!!\n\n", fp); 
+    // create a thread group the size of MAX_CORES
+    pthread_t *thread_group2 = malloc(sizeof(pthread_t) * MAX_CORES);
+
+    // start all threads to begin work
+    for (i = 0; i < MAX_CORES; ++i) 
+    {
+        pthread_create(&thread_group2[i], NULL, start_counting, filename);
+        
+    }
+
+    // wait for all threads to finish
+    for (i = 0; i < MAX_CORES; ++i) 
+    {
+        pthread_join(thread_group2[i], NULL);
+    }
     fclose(fp);
     
     
