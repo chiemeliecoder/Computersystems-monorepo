@@ -130,8 +130,8 @@ int main(void)
     
     pthread_mutex_unlock(&mutex);
     
-    char *filename = "Multiprocessing.txt";
-    FILE *fp = fopen(filename, "r");
+    char *filename = "Multiprocessing2.txt";
+    FILE *fp = fopen(filename, "a");
     char *table;
     char *text1[1000]; //array to store string
     char *text2[1000];
