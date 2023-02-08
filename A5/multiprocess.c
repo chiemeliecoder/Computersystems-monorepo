@@ -147,7 +147,7 @@ int main(void)
 
     // fclose(out);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 
