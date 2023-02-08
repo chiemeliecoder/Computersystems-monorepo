@@ -30,6 +30,9 @@ void *start_counting(FILE *out)
 }
 
 
+//here files are automatically made with different names I have made 4 files so when you run the program you should see 4 files called 
+//result0,1,2,3 with the 30 sentences in them
+
 int main(void) 
 {
     int i = 0;
@@ -128,6 +131,11 @@ int main(void)
     }
     sleep(1);
     
+    // you need to write any word into the command line but dont forget to add -e to the front of the cipher promt. if you write a word with no punctuation the values written in the 
+    //microprosessing2 text file would be smaller about 5 sentences than than when you write a word in the command line with a (. ! ?) you would get 25 words displayed
+    //in the microprosessing2 text file
+    
+    
     pthread_mutex_unlock(&mutex);
     
     char *filename = "Multiprocessing2.txt";
@@ -159,17 +167,79 @@ int main(void)
     printf("ciphertext %s\n", ciphertext2);
     
     //check for punctutations in the inputed sentence
-     int punctionationCheck = 0;
+    int punctionationCheck = 0;
     if(strchr(text1, '!') ||  strchr(text1, '?') || strchr(text1, '.')  != NULL){
         punctionationCheck = 1;
         printf("punctionation exist = %d\n", punctionationCheck);
-        fputs("On the last day of love my heart cracked inside my body.\n",filename);
+        
+        fputs("On the last day of love my heart cracked inside my body.\n",fp);
+        
+        fputs("I reached for the last bouquet of flowers you gave me.\n", fp);
+        
+        fputs("Now wilting in their vase one by one.\n", fp);
+    
+        fputs("I popped their heads off and ate them.\n", fp); 
+        
+        fputs("I stuffed a towel at the foot of every door leave.\n", fp);
+        
+        fputs("I told the air i have no use for you.\n", fp);
+        
+        fputs("I drew every curtain in the house.\n", fp); 
+        
+        fputs("Go I told the light no one is coming in and no one is going out.\n", fp); 
+        
+        fputs("you left and I wanted you still yet.\n", fp);
+        
+        fputs("I deserved someone who was willing to stay?\n", fp);
+        
+        fputs("I spend days in bed debilitated by loss.\n", fp); 
+        
+        fputs("I attempt to cry you back but the water is done and still you have not returned?\n", fp); 
+        
+        fputs("I pinch my belly till it bleeds.\n", fp); 
+        
+        fputs("I have lost count of the days sun becomes moon and moon becomes sun.\n", fp);
+        
+        fputs("I become a ghost!\n" , fp);
+        
+        fputs("A dozen different thoughts tear through me each second.\n", fp); 
+        
+        fputs("You must be on your way perhaps.\n" , fp);
+        
+        fputs("It’s best if you’re not!\n", fp); 
+        
+        fputs("I am okay.\n" , fp);
+        
+        fputs("no, I am angry.\n", fp); 
+        
+        fputs("Yes, I hate you.\n" , fp);
+        
+        fputs("Maybe I can’t move on.\n" , fp);
+        
+        fputs("I will forgive you.\n" , fp);
+        
+        fputs("I want to rip my hair out over and over and over again till my mind exhausts itself into a silence.\n" , fp);
+        
         
         
     }else{
         int punctionationnotavail = 0;
-        printf("punctionation doesnot exist = %d\n", punctionationnotavail);}
+        printf("punctionation doesnot exist = %d\n", punctionationnotavail);
+        fputs("Yesterday the rain tried to imitate my hands by running down your body,\n", fp);
+        
+        fputs("I ripped the sky apart for allowing it,\n", fp);
+        
+        fputs("The hummingbirds tell me you’ve changed your hair\n" , fp);
+        
+        fputs("I tell them I don’t care while listening to them describe every detai\n", fp);
+        
+        fputs("I envy the winds who still witness you\n", fp);
+    }
     sleep(1);
+    
+    
+    pthread_mutex_unlock(&mutex); //gives a break for the words inputed in the command line to be decyphered.
+    
     
 
     //turning the ciphered text back to its original state is done below
