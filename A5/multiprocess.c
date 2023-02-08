@@ -5,7 +5,7 @@
 
 #define COUNT_TO 30
 #define MAX_CORES 2
-#define numfiles 4 //number of files
+#define numfiles 2 //number of files
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 long long i = 0;
