@@ -159,13 +159,17 @@ int main(void)
     printf("ciphertext %s\n", ciphertext2);
     
     //check for punctutations in the inputed sentence
-    int punctionationCheck = 0;
+     int punctionationCheck = 0;
     if(strchr(text1, '!') ||  strchr(text1, '?') || strchr(text1, '.')  != NULL){
         punctionationCheck = 1;
+        printf("punctionation exist = %d\n", punctionationCheck);
+        fputs("On the last day of love my heart cracked inside my body.\n",filename);
         
-    }
+        
+    }else{
+        int punctionationnotavail = 0;
+        printf("punctionation doesnot exist = %d\n", punctionationnotavail);}
     sleep(1);
-    printf("punctionation exist = %d\n", punctionationCheck);
     
 
     //turning the ciphered text back to its original state is done below
