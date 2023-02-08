@@ -5,7 +5,7 @@
 
 #define COUNT_TO 30
 #define MAX_CORES 2
-#define numfiles 2
+#define numfiles 4 //number of files
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 long long i = 0;
@@ -42,9 +42,9 @@ int main(void)
         
         char filename[100];
         
-        sprintf(filename, "results%d.dat", k);
+        sprintf(filename, "results%d.dat", k); //change the file name by counting up getting result0, result 1, result 3 file. run code and check your directory for the new files with the information
         
-        out[k] = fopen(filename,"a");
+        out[k] = fopen(filename,"a"); //puts the sentences in the files 
         
         fputs("On the last day of love my heart cracked inside my body.\n",out[k]);
         
@@ -124,15 +124,12 @@ int main(void)
         fclose(out[k]);
         
     }
-    char *filename = "Multiprocessing.txt";
-    FILE *fp = fopen(filename, "r");
-    printf(" File %s successfully encrypted ..!!\n\n", fp); 
-    fclose(fp);
-    
     sleep(1);
     
     pthread_mutex_unlock(&mutex);
     
+    char *filename = "Multiprocessing.txt";
+    FILE *fp = fopen(filename, "r");
     char *table;
     char *text1[1000]; //array to store string
     char *text2[1000];
@@ -177,6 +174,12 @@ int main(void)
     free(ciphertext2);
     free(parsetext2);
 
+    printf(" File %s successfully encrypted ..!!\n\n", fp); 
+    fclose(fp);
+    
+    
+    
+    
     // // create a thread group the size of MAX_CORES
     // pthread_t *thread_group = malloc(sizeof(pthread_t) * MAX_CORES);
 
