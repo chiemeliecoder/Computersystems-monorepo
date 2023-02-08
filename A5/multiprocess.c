@@ -46,6 +46,8 @@ int main(void)
         
         out[k] = fopen(filename,"a"); //puts the sentences in the files 
         
+        //the 30 sentences below
+        
         fputs("On the last day of love my heart cracked inside my body.\n",out[k]);
         
         fputs("I spent the entire night casting spells to bring you back.\n", out[k]);
