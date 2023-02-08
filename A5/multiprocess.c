@@ -126,7 +126,7 @@ int main(void)
     }
     char *filename = "Multiprocessing.txt";
     FILE *fp = fopen(filename, "r");
-    printf(" File %s successfully encrypted ..!!\n\n", fp); 
+    //printf(" File %s successfully encrypted ..!!\n\n", fp); 
     fclose(fp);
 
     // // create a thread group the size of MAX_CORES
