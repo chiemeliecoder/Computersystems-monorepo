@@ -128,6 +128,52 @@ int main(void)
     FILE *fp = fopen(filename, "r");
     printf(" File %s successfully encrypted ..!!\n\n", fp); 
     fclose(fp);
+    
+    pthread_mutex_unlock(&mutex);
+    
+    char *table;
+    char *text1[1000]; //array to store string
+    char *text2[1000];
+//     char *text1 = "hello world",
+//             *text2 = "Glad to meet you, polybius cipher.";
+    char *ciphertext1, *parsetext1,
+            *ciphertext2, *parsetext2; //pass the ciphered text and  to decipher the text that is a = 44 ciphered text is 44 and parsetext becomes a
+
+    //table generated
+    printf("Generate a table:\n");
+    table = generateTable();
+    //printTable(table);
+
+    //text is ciphered 
+    //please write in the command lined after cipher is printed out -e the the two text i.e cipher-e hello world
+    //the ciphered text would be printed out
+    printf("\ncipher");
+    scanf("-e %s %s",&text1, &text2);
+    ciphertext1 = pbEncode(table, text1, NO_BLANK);
+    ciphertext2 = pbEncode(table, text2, NO_BLANK);
+    printf("original %s\n", text1);
+    printf("ciphertext %s\n", ciphertext1);
+    printf("\ncipher-e\n");
+    printf("original %s\n", text2);
+    printf("ciphertext %s\n", ciphertext2);
+    
+    
+
+    //turning the ciphered text back to its original state is done below
+    
+    printf("\nDecipher-d\n");
+    parsetext1 = pbDecode(table, ciphertext1);
+    printf("result %s\n", parsetext1);
+    
+    printf("\nDecipher-d\n");
+    parsetext2 = pbDecode(table, ciphertext2);
+    printf("result %s\n", parsetext2);
+
+    free(table);
+    free(ciphertext1);
+    free(parsetext1);
+    free(ciphertext2);
+    free(parsetext2);
 
     // // create a thread group the size of MAX_CORES
     // pthread_t *thread_group = malloc(sizeof(pthread_t) * MAX_CORES);
