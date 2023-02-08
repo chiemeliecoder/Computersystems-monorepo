@@ -188,7 +188,8 @@ int main(void)
     free(ciphertext2);
     free(parsetext2);
 
-    printf(" File %s successfully encrypted ..!!\n\n", fp); 
+    printf("File %s successfully encrypted ..!!\n\n", filename); 
+    pthread_mutex_unlock(&mutex);
     // create a thread group the size of MAX_CORES
     pthread_t *thread_group2 = malloc(sizeof(pthread_t) * MAX_CORES);
 
