@@ -129,6 +129,8 @@ int main(void)
     printf(" File %s successfully encrypted ..!!\n\n", fp); 
     fclose(fp);
     
+    sleep(1);
+    
     pthread_mutex_unlock(&mutex);
     
     char *table;
