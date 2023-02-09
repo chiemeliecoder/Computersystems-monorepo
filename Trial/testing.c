@@ -43,7 +43,7 @@ int main(void)
 	printf(" Input the filename to be opened : ");
 	scanf("%s",fname);	
 
-    fptr = fopen(fname, "r");
+    fptr = fopen(fname, "a");
     while(fgets(line[i], LSIZ, fptr)) 
 	{
         line[i][strlen(line[i]) - 1] = '\0';
