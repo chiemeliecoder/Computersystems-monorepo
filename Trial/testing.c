@@ -64,9 +64,9 @@ int main(void)
     char *args[]={"./cipher","-e",fptr,NULL};
     execv(args[0],args);
     
-    sleep(1);
+//     sleep(1);
     
-    pthread_mutex_unlock(&mutex);
+//     pthread_mutex_unlock(&mutex);
     
     //int i = 0;
 
