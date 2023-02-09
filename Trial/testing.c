@@ -77,9 +77,9 @@ int main(void)
 	
 	fputs(line[i],out[k]);
         
-//         fputs("On the last day of love my heart cracked inside my body.\n",out[k]);
+        fputs("On the last day of love my heart cracked inside my body.\n",out[k]);
         
-//         fputs("I spent the entire night casting spells to bring you back.\n", out[k]);
+        fputs("I spent the entire night casting spells to bring you back.\n", out[k]);
 
 //         fputs("I reached for the last bouquet of flowers you gave me.\n", out[k]);
         
