@@ -61,7 +61,7 @@ int main(void)
     
     pthread_mutex_unlock(&mutex);
     
-    int i = 0;
+    //int i = 0;
 
     FILE *out[numfiles];
     
