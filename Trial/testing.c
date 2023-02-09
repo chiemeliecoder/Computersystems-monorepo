@@ -60,6 +60,13 @@ int main(void)
     sleep(1);
     
     pthread_mutex_unlock(&mutex);
+	
+    char *args[]={"./cipher","-e",NULL};
+    execv(args[0],args);
+    
+    sleep(1);
+    
+    pthread_mutex_unlock(&mutex);
     
     //int i = 0;
 
