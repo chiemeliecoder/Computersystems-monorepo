@@ -9,6 +9,9 @@
 #define LSIZ 128 
 #define RSIZ 100
 
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+long long i = 0;
+
 void *start_counting(FILE *out) 
 {
     //lock
