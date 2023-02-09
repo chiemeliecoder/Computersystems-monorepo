@@ -61,12 +61,6 @@ int main(void)
     
     pthread_mutex_unlock(&mutex);
 	
-    char *args[]={"./cipher","-e",fptr,NULL};
-    execv(args[0],args);
-    
-//     sleep(1);
-    
-//     pthread_mutex_unlock(&mutex);
     
     //int i = 0;
 
@@ -160,6 +154,14 @@ int main(void)
             pthread_join(thread_group[i], NULL);
         }
         fclose(out[k]);
+	sleep(1);
+
+        pthread_mutex_unlock(&mutex);
+	
+        char *args[]={"./cipher","-e",line[i],NULL};
+        execv(args[0],args);
+
+        
         
     }
     
