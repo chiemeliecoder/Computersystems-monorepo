@@ -67,7 +67,7 @@ int main(void)
     
     for(int k =0; k < numfiles; k++){
         
-        int i = 0;
+        //int i = 0;
         
         char filename[100];
         
