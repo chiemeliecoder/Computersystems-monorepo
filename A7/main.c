@@ -67,6 +67,7 @@ void unitTest6(){
   
   // pm_free(c);
   // int *e= (int)pm_malloc(500*sizeof(int));
+  printf("please uncomment test 6 to test a trigger showing no sufficient memory to allocate \n");
   printf("Allocation and deallocation is done successfully for unitTest 6!\n");
   
 }
