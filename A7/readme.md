@@ -20,6 +20,10 @@ In the design you need to keep in mind the ability reuse the free memory when av
 Below is an example of metadata attached to chck of memory allocated to keep track of if the memory has been freed so it can be resused or merged or splited to fit exactly the requested memory i.e I reuest for 128 chunck of memeory and you have 500 you have to slipt that memmory down to 128 to fit 128 chunck I need.
 
 ```c
+Metadata code for Heap manageent
+```
+
+```c
 void *a = malloc(256);  // 256 == 0x 100 bytes
 void *b = malloc(256);
 void *c = malloc(128);
@@ -61,7 +65,7 @@ int main() {
 }
 ```
 
-a and b can be merged together if I request to use a memory of 512 and memory a and b that was freed can occupy a chunck of memory of 128. if I required 128 chunck of memeory I can use my function frag to split a and b memmory of 256 to 128 to fit exactly to what i requested and avoid wasting memory
+a and b can be merged together if I request to use a memory of 512 and memory a and b that was freed can occupy a chunck of memory of 128. if I required 128 chunck of memeory I can use my function frag to split a and b memory of 256 to 128 to fit exactly to what i requested and avoid wasting memory
 
 ![heeepa4](https://user-images.githubusercontent.com/77821039/220267352-6f031992-6073-4734-8f8d-33aea0ef0fb9.PNG)
 
