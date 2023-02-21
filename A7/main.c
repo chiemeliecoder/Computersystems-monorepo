@@ -4,15 +4,15 @@
 
 int main(){
   
-  int *p= (int)myMalloc(100*sizeof(int));
-  char *q= (char)myMalloc(250*sizeof(char));
-  int *r= (int)myMalloc(1000*sizeof(int));
+  int *p= (int)pm_malloc(100*sizeof(int));
+  char *q= (char)pm_malloc(250*sizeof(char));
+  int *r= (int)pm_malloc(1000*sizeof(int));
   
-  myFree(p);
-  char *w= (char)myMalloc(700);
+  pm_free(p);
+  char *w= (char)pm_malloc(700);
   
-  myFree(r);
-  int *k= (int)myMalloc(500*sizeof(int));
+  pm_free(r);
+  int *k= (int)pm_malloc(500*sizeof(int));
   printf("Allocation and deallocation is done successfully!");
   return 0;
  
