@@ -17,7 +17,7 @@ In the design you need to keep in mind the ability reuse the free memory when av
 
 3.[Memory Merging]: When memory is freed, two blocks of free memory may appear next to one-another we need to combine the blocks together to create one larger block. This solves external fragmentation
 
-Below is an example of metadata attached to chunk of memory allocated to keep track of if the memory has been freed so it can be resused or merged or splited to fit exactly the requested memory i.e I reuest for 128 chunk of memeory and you have 500 you have to slipt that memmory down to 128 to fit 128 chunk I need.
+Below is an example of metadata attached to chunk of memory allocated to keep track of if the memory has been freed so it can be resused or merged or splited to fit exactly the requested memory i.e I request for 128 chunk of memory and you have 500 you have to slipt that memmory down to 128 to fit 128 chunk I need.
 
 ```c
 Metadata code Heap managment
