@@ -5,7 +5,7 @@ What is heap management?
 It represents the way SYSLINUX handles the dynamic memory allocation requests of modules through malloc() .
 
 In my design where I would attach a metadata to the chunk of memory to be 
-I would be using markers to tell if the block is used or not.If the block is free; 1 if the block is used.
+I would be using markers to tell if the block is used or not.
 
 Memory Heap Allocation Design
 
@@ -20,11 +20,11 @@ In the design you need to keep in mind the ability reuse the free memory when av
 Below is an example of metadata attached to chunk of memory allocated to keep track of if the memory has been freed so it can be resused or merged or splited to fit exactly the requested memory i.e I reuest for 128 chunk of memeory and you have 500 you have to slipt that memmory down to 128 to fit 128 chunk I need.
 
 ```c
-Metadata code for Heap manageent
+Metadata code Heap managment
 
 struct block{
  size_t size; //the size of the block
- int free; //This flag is used to know whether the block described by the metadata structure. It is set to 1 else 0
+ int free; //This flag is used to know whether the block described by the metadata structure.
  struct block *next; //Pointer to the next metadata
 
 };
@@ -85,6 +85,7 @@ int main() {
 a and b can be merged together if I request to use a memory of 512 and memory a and b that was freed can occupy a chunk of memory of 128. if I required 128 chunk of memeory I can use my function frag to split a and b memory of 256 to 128 to fit exactly to what i requested and avoid wasting memory
 
 ![heeepa4](https://user-images.githubusercontent.com/77821039/220267352-6f031992-6073-4734-8f8d-33aea0ef0fb9.PNG)
+
 
 
 
