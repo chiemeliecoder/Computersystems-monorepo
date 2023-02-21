@@ -30,7 +30,7 @@ free(d);
 
 ![hepa1](https://user-images.githubusercontent.com/77821039/220267199-e93ea146-93c7-49ed-bd0c-faebc71e2348.PNG)
 
-
+A diagram showing a, b and d being freed.
 
 ![heap2](https://user-images.githubusercontent.com/77821039/220267276-5eb6e920-ea7a-4483-b18a-0357391761fa.PNG)
 
