@@ -85,7 +85,9 @@ int main() {
 
 a and b can be merged together if I request to use a memory of 512 and memory a and b that was freed can occupy a chunk of memory of 128. if I required 128 chunk of memeory I can use my function frag to split a and b memory of 256 to 128 to fit exactly to what i requested and avoid wasting memory
 
-![heeepa4](https://user-images.githubusercontent.com/77821039/220267352-6f031992-6073-4734-8f8d-33aea0ef0fb9.PNG)
+![startstack](https://user-images.githubusercontent.com/77821039/220288592-20f83483-6c07-4d79-a48b-9f35883e36cd.PNG)
+
+
 
 
 
