@@ -4,17 +4,14 @@
 #define MYMALLOC_H
 #endif
 
-#define HER 20000
+#define HER 10000000
 
 char mem[HER];
 
 struct block{
- //the size of the block
- size_t size;
- //This flag is used to know whether the block described by the metadata structure. It is set to 1 else 0
- int free;
- //Pointer to the next metadata
- struct block *next; 
+ size_t size; //the size of the block
+ int free; //This flag is used to know whether the block described by the metadata structure. It is set to 1 else 0
+ struct block *next; //Pointer to the next metadata
 
 };
 
@@ -22,9 +19,8 @@ struct block{
 
 struct block* freeList=(struct block*)mem;
 
-//Initializing the block of memory
-void initialize();
-void split(struct block *fitting_slot,size_t size);
-void *MyMalloc(size_t noOfBytes);
-void merge();
-void MyFree(void* ptr);
+void init();
+void frag(struct block *fitting_slot,size_t size);
+void *myMalloc(size_t noOfBytes);
+void mergefrag();
+void myFree(void* ptr);
