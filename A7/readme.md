@@ -87,32 +87,6 @@ a and b can be merged together if I request to use a memory of 512 and memory a 
 
 ![startstack](https://user-images.githubusercontent.com/77821039/220288592-20f83483-6c07-4d79-a48b-9f35883e36cd.PNG)
 
-The first allocation
-```c
-[mstats-alloc]: Injecting your alloc library into the running process.
-Inside: malloc(256):
--- Start of Heap (0x56009a9ec000) --
--- End of Heap (0x56009a9ec000) --
-```
-
-The second allocation
-
-```c
-Inside: malloc(256):
--- Start of Heap (0x56009a9ec000) --
-metadata for memory 0x56009a9ec008: (0x56009a9ec000, size=256, isUsed=0)
--- End of Heap (0x56009a9ec108) --
-```
-
-The third allocation
-
-```c
-Inside: malloc(128):
--- Start of Heap (0x56009a9ec000) --
-metadata for memory 0x56009a9ec008: (0x56009a9ec000, size=256, isUsed=0)
-metadata for memory 0x56009a9ec110: (0x56009a9ec108, size=256, isUsed=0)
--- End of Heap (0x56009a9ec210) --
-```
 The final allocation
 ```c
 Inside: malloc(250):
