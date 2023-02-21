@@ -1,16 +1,6 @@
-all: main
-
-CC = clang
-override CFLAGS += -g -Wno-everything -pthread -lm
-
-SRCS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.c' -print)
-HEADERS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.h' -print)
-
-main: $(SRCS) $(HEADERS)
-	$(CC) $(CFLAGS) $(SRCS) -o "$@"
-
-main-debug: $(SRCS) $(HEADERS)
-	$(CC) $(CFLAGS) -O0 $(SRCS) -o "$@"
+#save file with name Makefile
+all: main.c
+	gcc -g -Wall -o CS5600.LearnC main.c malloc.c
 
 clean:
-	rm -f main main-debug
+	rm * .o CS5600.LearnC
