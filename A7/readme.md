@@ -4,7 +4,7 @@ What is heap management?
 
 It represents the way SYSLINUX handles the dynamic memory allocation requests of modules through malloc() .
 
-I would use a paged design where I would attach a metadata to the chunck of memeory to be 
+In my design where I would attach a metadata to the chunck of memeory to be 
 I would be using markers to tell if the block is used or not.If the block is free; 1 if the block is used.
 
 Memory Heap Allocation Design
