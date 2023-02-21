@@ -5,7 +5,7 @@ What is heap management?
 It represents the way SYSLINUX handles the dynamic memory allocation requests of modules through malloc() .
 
 In my design where I would attach a metadata to the chunk of memory to be 
-I would be using markers to tell if the block is used or not.
+I would be using markers(free) to tell if the block is used or not.It is set to 1 when free and 0 when not free
 
 Memory Heap Allocation Design
 
@@ -24,7 +24,7 @@ Metadata code Heap managment
 
 struct block{
  size_t size; //the size of the block
- int free; //This flag is used to know whether the block described by the metadata structure.
+ int free; //This flag is used to know whether the block described by the metadata structure.It is set to 1 when free and 0 when not free
  struct block *next; //Pointer to the next metadata
 
 };
@@ -41,15 +41,15 @@ void pm_free(void* ptr);
 ```
 
 ```c
-void *a = malloc(256);  // 256 == 0x 100 bytes
-void *b = malloc(256);
-void *c = malloc(128);
-void *d = malloc(256);
-void *e = malloc(128);
+void *a = pm_malloc(256);  // 256 == 0x 100 bytes
+void *b = pm_malloc(256);
+void *c = pm_malloc(128);
+void *d = pm_malloc(256);
+void *e = pm_malloc(128);
 /* Line 6 */
-free(a);
-free(b);
-free(d);
+pm_free(a);
+pm_free(b);
+pm_free(d);
 /* Line 10 */
 ```
 ![stack](https://user-images.githubusercontent.com/77821039/220288365-8c110435-fcbd-4390-b3a9-17a26d50c78b.PNG)
@@ -66,20 +66,20 @@ A diagram showing a, b and d being freed.
 #include <stdlib.h>
 
 int main() {
-  void *a = malloc(256);  // 256 == 0x 100 bytes
-  void *b = malloc(256);
-  void *c = malloc(128);
-  void *d = malloc(256);
-  void *e = malloc(128);
+  void *a = pm_malloc(256);  // 256 == 0x 100 bytes
+  void *b = pm_malloc(256);
+  void *c = pm_malloc(128);
+  void *d = pm_malloc(256);
+  void *e = pm_malloc(128);
   /* Line 6 */
-  free(a);
-  free(b);
-  free(d);
+  pm_free(a);
+  pm_free(b);
+  pm_free(d);
   /* Line 10 */
-  void *r1 = malloc(10);
-  void *r2 = malloc(10);
-  void *r3 = malloc(300);
-  void *r4 = malloc(250);  
+  void *r1 = pm_malloc(10);
+  void *r2 = pm_malloc(10);
+  void *r3 = pm_malloc(300);
+  void *r4 = pm_malloc(250);  
 }
 ```
 
