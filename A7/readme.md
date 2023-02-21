@@ -35,9 +35,9 @@ struct block* freeList=(struct block*)mem;
 
 void init();
 void frag(struct block *slot,size_t size);
-void *myMalloc(size_t noOfBytes);
+void *pm_malloc(size_t noOfBytes);
 void mergefrag();
-void myFree(void* ptr)
+void pm_free(void* ptr);
 ```
 
 ```c
