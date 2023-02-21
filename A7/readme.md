@@ -100,7 +100,7 @@ The second allocation
 ```c
 Inside: malloc(256):
 -- Start of Heap (0x56009a9ec000) --
-metadata for memory 0x56009a9ec008: (0x56009a9ec000, size=256, isUsed=1)
+metadata for memory 0x56009a9ec008: (0x56009a9ec000, size=256, isUsed=0)
 -- End of Heap (0x56009a9ec108) --
 ```
 
@@ -109,8 +109,8 @@ The third allocation
 ```c
 Inside: malloc(128):
 -- Start of Heap (0x56009a9ec000) --
-metadata for memory 0x56009a9ec008: (0x56009a9ec000, size=256, isUsed=1)
-metadata for memory 0x56009a9ec110: (0x56009a9ec108, size=256, isUsed=1)
+metadata for memory 0x56009a9ec008: (0x56009a9ec000, size=256, isUsed=0)
+metadata for memory 0x56009a9ec110: (0x56009a9ec108, size=256, isUsed=0)
 -- End of Heap (0x56009a9ec210) --
 ```
 The final allocation
