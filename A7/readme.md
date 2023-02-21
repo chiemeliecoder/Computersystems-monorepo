@@ -6,8 +6,12 @@ I would be using markers to tell if the block is used or not.If the block is fre
 Memory Heap Allocation Design
 
 In the design you need to keep in mind the ability reuse the free memory when available. To optimize heap memeory we need to consider a few things like:
+
 1.[Block Splitting]: When memory is re-used, it is very easy to simple mark the block isUsed to be 1 again even if the block is not a perfect fit. We should be able to split our memeory block to fit what memory is required.
+
 2.[Free Lists]: we need to be able traverse both used and free blocks when walking through our memory.
+
+3.[Memory Merging]: When memory is freed, two blocks of free memory may appear next to one-another we need to combine the blocks together to create one larger block. This solves external fragmentation
 
 ```c
 void *a = malloc(256);  // 256 == 0x 100 bytes
