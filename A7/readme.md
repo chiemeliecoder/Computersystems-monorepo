@@ -91,14 +91,14 @@ The final allocation
 ```c
 Inside: malloc(250):
 -- Start of Heap (0x56009a9ec000) --
-metadata for memory 0x56009a9ec008: (0x56009a9ec000, size=256, isUsed=1)
-metadata for memory 0x56009a9ec110: (0x56009a9ec108, size=256, isUsed=1)
-metadata for memory 0x56009a9ec218: (0x56009a9ec210, size=128, isUsed=0)
-metadata for memory 0x56009a9ec2a0: (0x56009a9ec298, size=256, isUsed=1)
-metadata for memory 0x56009a9ec3a8: (0x56009a9ec3a0, size=128, isUsed=0)
-metadata for memory 0x56009a9ec430: (0x56009a9ec428, size=10, isUsed=0)
-metadata for memory 0x56009a9ec442: (0x56009a9ec43a, size=10, isUsed=0)
-metadata for memory 0x56009a9ec454: (0x56009a9ec44c, size=300, isUsed=0)
+metadata for memory 0x56009a9ec008: (0x56009a9ec000, size=256, free=1)
+metadata for memory 0x56009a9ec110: (0x56009a9ec108, size=256, free=1)
+metadata for memory 0x56009a9ec218: (0x56009a9ec210, size=128, free=0)
+metadata for memory 0x56009a9ec2a0: (0x56009a9ec298, size=256, free=1)
+metadata for memory 0x56009a9ec3a8: (0x56009a9ec3a0, size=128, free=0)
+metadata for memory 0x56009a9ec430: (0x56009a9ec428, size=10, free=0)
+metadata for memory 0x56009a9ec442: (0x56009a9ec43a, size=10, free=0)
+metadata for memory 0x56009a9ec454: (0x56009a9ec44c, size=300, free=0)
 -- End of Heap (0x56009a9ec580) --
 ```
 
