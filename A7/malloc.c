@@ -25,7 +25,7 @@ void frag(struct block *slot,size_t size){
 }
 
 
-void *myMalloc(size_t noOfBytes){
+void *pm_malloc(size_t noOfBytes){
   //pointers to traverse through the freeList
  struct block *current,*prev;
   //the starting address of the allocated memory
@@ -88,7 +88,7 @@ void mergefrag(){
 }
 
 //deallocate memory
-void myFree(void* ptr){
+void pm_free(void* ptr){
  if(((void*)mem<=ptr)&&(ptr<=(void*)(mem+HER))){
   struct block* curr=ptr;
   --curr;
