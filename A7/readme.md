@@ -30,7 +30,7 @@ free(d);
 
 
 
-```y
+```c
 #include <stdlib.h>
 
 int main() {
@@ -50,8 +50,6 @@ int main() {
   void *r4 = malloc(250);  
 }
 ```
-
-
 
 ![heeepa4](https://user-images.githubusercontent.com/77821039/220267352-6f031992-6073-4734-8f8d-33aea0ef0fb9.PNG)
 
