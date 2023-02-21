@@ -11,7 +11,7 @@ Memory Heap Allocation Design
 
 In the design you need to keep in mind the ability reuse the free memory when available. To optimize heap memeory we need to consider a few things like:
 
-1.[Block Splitting]: When memory is re-used, it is very easy to simple mark the block isUsed to be 1 again even if the block is not a perfect fit. We should be able to split our memeory block to fit what memory is required.
+1.[Block Splitting]: When memory is re-used, it is very easy to simple mark the block is used to be 1 again even if the block is not a perfect fit. We should be able to split our memeory block to fit what memory is required.
 
 2.[Free Lists]: we need to be able traverse both used and free blocks when walking through our memory.
 
