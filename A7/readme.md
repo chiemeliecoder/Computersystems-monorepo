@@ -9,7 +9,18 @@ In the design you need to keep in mind the ability reuse the free memory when av
 1.[Block Splitting]: When memory is re-used, it is very easy to simple mark the block isUsed to be 1 again even if the block is not a perfect fit. We should be able to split our memeory block to fit what memory is required.
 2.[Free Lists]: we need to be able traverse both used and free blocks when walking through our memory.
 
-
+```c
+void *a = malloc(256);  // 256 == 0x 100 bytes
+void *b = malloc(256);
+void *c = malloc(128);
+void *d = malloc(256);
+void *e = malloc(128);
+/* Line 6 */
+free(a);
+free(b);
+free(d);
+/* Line 10 */
+```
 
 ![hepa1](https://user-images.githubusercontent.com/77821039/220267199-e93ea146-93c7-49ed-bd0c-faebc71e2348.PNG)
 
