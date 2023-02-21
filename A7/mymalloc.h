@@ -20,7 +20,7 @@ struct block{
 struct block* freeList=(struct block*)mem;
 
 void init();
-void frag(struct block *fitting_slot,size_t size);
+void frag(struct block *slot,size_t size);
 void *myMalloc(size_t noOfBytes);
 void mergefrag();
 void myFree(void* ptr);
