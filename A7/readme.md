@@ -9,15 +9,15 @@ I would be using markers(free) to tell if the block is used or not.It is set to 
 
 Memory Heap Allocation Design
 
-In the design you need to keep in mind the ability reuse the free memory when available. To optimize heap memeory we need to consider a few things like:
+In the design you need to keep in mind the ability to reuse the free memory when available. To optimize heap memeory we need to consider a few things like:
 
-1.[Block Splitting]: When memory is re-used, it is very easy to simple mark the block is used to be 1 again even if the block is not a perfect fit. We should be able to split our memeory block to fit what memory is required.
+1.[Block Splitting]: When memory is re-used, it is very easy to simple mark the block is used would be flagged as 0 again even if the block is not a perfect fit. We should be able to split our memeory block to fit what memory is required.
 
 2.[Free Lists]: we need to be able traverse both used and free blocks when walking through our memory.
 
 3.[Memory Merging]: When memory is freed, two blocks of free memory may appear next to one-another we need to combine the blocks together to create one larger block. This solves external fragmentation
 
-Below is an example of metadata attached to chunk of memory allocated to keep track of if the memory has been freed so it can be resused or merged or splited to fit exactly the requested memory i.e I request for 128 chunk of memory and you have 500 you have to slipt that memmory down to 128 to fit 128 chunk I need.
+Below is an example of metadata attached to a chunk of memory allocated to keep track of if the memory has been freed so it can be resused or merged or splited to fit exactly the requested memory i.e I request for 128 chunk of memory and you have 500 you have to slipt that memmory down to 128 to fit 128 chunk I need.
 
 ```c
 Metadata code Heap managment
