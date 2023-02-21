@@ -52,12 +52,13 @@ free(b);
 free(d);
 /* Line 10 */
 ```
+![stack](https://user-images.githubusercontent.com/77821039/220288365-8c110435-fcbd-4390-b3a9-17a26d50c78b.PNG)
 
-![hepa1](https://user-images.githubusercontent.com/77821039/220267199-e93ea146-93c7-49ed-bd0c-faebc71e2348.PNG)
 
 A diagram showing a, b and d being freed.
 
-![heap2](https://user-images.githubusercontent.com/77821039/220267276-5eb6e920-ea7a-4483-b18a-0357391761fa.PNG)
+![freeheap](https://user-images.githubusercontent.com/77821039/220288440-c346ec5f-b717-4bda-9a6b-d07b211a583c.PNG)
+
 
 
 
