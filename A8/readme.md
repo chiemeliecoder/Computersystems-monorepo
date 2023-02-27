@@ -44,3 +44,6 @@ mstate ar_ptr;
 
   return victim;
 ```
+
+# What is an Arena?
+A structure that is shared among one or more threads which contains references to one or more heaps, as well as linked lists of chunks within those heaps which are "free". Threads assigned to each arena will allocate memory from that arena's free lists.
