@@ -9,6 +9,7 @@ Each area has its own lock. When a thread needs to allocate memory, pm_malloc_lo
 
 # An issue
 When malloc uses a lock to make the threads "take turns" accessing malloc's internal structures. Still, taking turns means one thread is doing nothing for a while, which can't be good for performance, and these locks themselves can take a significant amount of time as they often need to synchronize access across CPU caches and sometimes across physical CPUs.
+to solve this issue we need an arena which efficiently handles multi-threaded applications.
 
 
 # Below is an example of a thread safe malloc
