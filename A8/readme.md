@@ -7,6 +7,7 @@ What is a Thread safe malloc?
 The standard malloc implementation is by itself not thread-safe. But in our custom malloc our malloc would create an area where it operates multiple allocation.
 Each area has its own lock. When a thread needs to allocate memory, pm_malloc_lock() picks an area, locks it, and allocates memory from it. This is what is meant to make a malloc thread safe.
 
+# An issue
 When malloc uses a lock to make the threads "take turns" accessing malloc's internal structures. Still, taking turns means one thread is doing nothing for a while, which can't be good for performance, and these locks themselves can take a significant amount of time as they often need to synchronize access across CPU caches and sometimes across physical CPUs.
 
 
