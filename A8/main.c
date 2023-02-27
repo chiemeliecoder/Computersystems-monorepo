@@ -109,7 +109,16 @@ int main(){
     }
     
   }
-  
+    
+  //a check that forms of heap corruption are handled
+
+  size_t size = 12;
+  void *mems = MALLOC(size);
+  printf("Successfully malloc'd %zu bytes at addr %p\n", size, mems);
+  assert(mems != NULL);
+  FREE(mems);
+  printf("Successfully free'd %zu bytes from addr %p\n", size, mems);
+
   
   printf("after concurrency has occured\n");
 
