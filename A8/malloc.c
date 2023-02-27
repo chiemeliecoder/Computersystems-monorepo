@@ -29,6 +29,7 @@ void frag(struct block *slot,size_t size){
 //Thread-safe malloc with locks 
 
 void *pm_malloc_lock(size_t noOfBytes){
+  printf("Inside: pm_malloc(%lu):\n", noOfBytes);
   //pointers to traverse through the freeList
  struct block *current,*prev;
   //the starting address of the allocated memory
@@ -48,10 +49,11 @@ void *pm_malloc_lock(size_t noOfBytes){
   printf("One block checked\n");
  }
   //If this condition below is met, the memory exactly fits the required size. set free flag to 0 showing the memory is allocated and return the starting address of the block of memory allocated.
- pthread_mutex_unlock(&mutex);
+ // pthread_mutex_unlock(&mutex);
  if((current->size)==noOfBytes){
   current->free=0;
   res=(void*)(++current);
+  pthread_mutex_unlock(&mutex);
   printf("Exact fitting block allocated\n");
   return res;
  }
@@ -59,6 +61,7 @@ void *pm_malloc_lock(size_t noOfBytes){
    //If this condition is met. The memory size is greater than what is required. call the frag function to cut the memory to make it fit to the required sizeand return the starting address of the block of memory allocated.
   frag(current,noOfBytes);
   res=(void*)(++current);
+  pthread_mutex_unlock(&mutex);
   printf("Fitting block allocated with a split\n");
   return res;
  }
@@ -72,44 +75,7 @@ void *pm_malloc_lock(size_t noOfBytes){
 }
 
 
-void *pm_malloc(size_t noOfBytes){
-  //pointers to traverse through the freeList
- struct block *current,*prev;
-  //the starting address of the allocated memory
- void *res;
- if(!(freeList->size)){
-  init();
-  printf("Memory initialized\n");
- }
-  //temporary pointer that points to the start of the metablock
- current=freeList;
-  //If this condition below is met, the metablock cannot be used for the allocation
- while((((current->size)<noOfBytes)||((current->free)==0))&&(current->next!=NULL)){
-  prev=current;
-  current=current->next;
-  printf("One block checked\n");
- }
-  //If this condition below is met, the memory exactly fits the required size. set free flag to 0 showing the memory is allocated and return the starting address of the block of memory allocated.
- if((current->size)==noOfBytes){
-  current->free=0;
-  res=(void*)(++current);
-  printf("Exact fitting block allocated\n");
-  return res;
- }
- else if((current->size)>(noOfBytes+sizeof(struct block))){
-   //If this condition is met. The memory size is greater than what is required. call the frag function to cut the memory to make it fit to the required sizeand return the starting address of the block of memory allocated.
-  frag(current,noOfBytes);
-  res=(void*)(++current);
-  printf("Fitting block allocated with a split\n");
-  return res;
- }
- else{
-   //no sufficient memory to allocate and return a null pointer.
-  res=NULL;
-  printf("Sorry. No sufficient memory to allocate\n");
-  return res;
- }
-}
+
 
 //function below helps solve external fragmentation by joining the consecutive free blocks by removing the metablocks lying in between
 
@@ -145,17 +111,5 @@ void pm_free_lock(void* ptr){
     pthread_mutex_unlock(&mutex);
   }else{
     pthread_mutex_unlock(&mutex);
-    printf("Please provide a valid pointer allocated by MyMalloc\n");}
-}
-
-//deallocate memory no locks
-
-void pm_free(void* ptr){
-  if(((void*)mem<=ptr)&&(ptr<=(void*)(mem+PAGE_SIZE))){
-    struct block* curr=ptr;
-    --curr;
-    curr->free=1;
-    mergefrag();
-  }else{
     printf("Please provide a valid pointer allocated by MyMalloc\n");}
 }
