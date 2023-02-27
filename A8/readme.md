@@ -1,7 +1,7 @@
 # Thread safe custom malloc
 
 ------------------------------------------------------------------------------------------------------------------------
-1. Introduction
+1. # Introduction
 ------------------------------------------------------------------------------------------------------------------------
 What is a Thread safe malloc?
 The standard malloc implementation is by itself not thread-safe. But in our custom malloc our malloc would create an area where it operates multiple allocation.
@@ -47,14 +47,16 @@ mstate ar_ptr;
 ```
 
 # What is an Arena?
-A structure that is shared among one or more threads which contains references to one or more heaps, as well as linked lists of chunks within those heaps which are "free". Threads assigned to each arena will allocate memory from that arena's free lists.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*A structure that is shared among one or more threads which contains references to one or more heaps, as well as linked lists of chunks within those heaps which are "free". Threads assigned to each arena will allocate memory from that arena's free lists.*
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-2. Heap Corruption
+2. # Heap Corruption
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 The common forms of corruption are handled with calls to assert which was used in the main.
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-3. To improve the performance of Malloc
+3. # To improve the performance of Malloc
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 We need to try a few things like:
 1. Getting to know how many threads will be making allocations, you can set MALLOC_ARENA_MAX (or, you can call mallopt() in your allocation) to set the number of arenas that make sense for your threads.
@@ -64,6 +66,6 @@ We need to try a few things like:
 5. if your allocations tend to be just a bit bigger than the internal alignment, you're going to be wasting a lot of address space. I.e. don't make a lot of 17-byte requests, because you'll waste 15 bytes per, or nearly half your memory
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-4. What I did wrong 
+4. # Issues and Bugs
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 To improve the performance of my malloc I wasnt able to create large and small allocations functions so as to set the M_MMAP_THRESHOLD and make changes to the MALLOC_TRIM_THRESHOLD variables.
