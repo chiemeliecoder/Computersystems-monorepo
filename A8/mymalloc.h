@@ -4,7 +4,7 @@
 #define MYMALLOC_H
 #endif
 
-#define PAGE_SIZE 2048
+#define PAGE_SIZE 4096
 
 char mem[PAGE_SIZE];
 
@@ -19,8 +19,12 @@ struct block{
 
 struct block* freeList=(struct block*)mem;
 
+
+
 void init();
 void frag(struct block *slot,size_t size);
 void *pm_malloc(size_t noOfBytes);
+void *pm_malloc_lock(size_t noOfBytes);
 void mergefrag();
 void pm_free(void* ptr);
+void pm_free_lock(void* ptr);
