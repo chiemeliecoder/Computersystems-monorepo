@@ -68,7 +68,28 @@ We need to try a few things like:
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 4.  Issues and Bugs
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-To improve the performance of my malloc I wasnt able to create large and small allocations functions so as to set the M_MMAP_THRESHOLD and make changes to the MALLOC_TRIM_THRESHOLD variables. Also due to poor memory the thread 2 could create an exit 1 or segmentation fault due to poor memeory management
+To improve the performance of my malloc I wasnt able to create large and small allocations functions so as to set the M_MMAP_THRESHOLD and make changes to the MALLOC_TRIM_THRESHOLD variables. Also due to poor memory the thread 2 could create an exit 1 or segmentation fault due to poor memeory management.
+I also couldn't do other allocations and free like Thread-local storage (TLS) because Clang doesnt support it
+
+```c
+//I could not implement this because clang does not support __thread Thread-local storage (TLS)
+void* thread_safe_malloc(size_t size) {
+  
+  void* ptr = NULL;
+  if (tls_pool.used + size > tls_pool.size) {
+      tls_pool.start = malloc(PAGE_SIZE);
+      tls_pool.size = PAGE_SIZE;
+      tls_pool.used = 0;
+  }
+  ptr = tls_pool.start + tls_pool.used;
+  tls_pool.used += size;
+  return ptr;
+}
+
+void thread_malloc_free(void *ptr){
+  printf("memeory pool doesnt support free");
+}
+```
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 5. How to run
