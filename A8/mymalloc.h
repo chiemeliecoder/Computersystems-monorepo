@@ -5,7 +5,7 @@
 #endif
 
 #define PAGE_SIZE 4096
-
+//4096 is 4 Kilobytes (KB)
 char mem[PAGE_SIZE];
 
 struct block{
