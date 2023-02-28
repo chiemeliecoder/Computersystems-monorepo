@@ -70,7 +70,7 @@ int main(){
  
   
   pthread_barrier_init(&barry, NULL, NUM_THREADS);
-  
+  //creating first thread
   for (int i=0; i < NUM_THREADS; i++) {
     printf("=======================unitTest%d=====================\n",i);
     thread_id[i] = i;
@@ -84,7 +84,7 @@ int main(){
 
 
   //this thread would run with thread 1 but the issue is that due to no memory it could come up with an exit 1 or segmentation fault due to no memeory management
-
+  //creating second thread
   for(int i = 0; i < NUM_THREADS; i++){
     printf("=======================unitTestforthreadfunc%d=====================\n",i);
     thread_id[i] = i;
@@ -96,6 +96,7 @@ int main(){
   }
 
   
+  //join for first thread
 
   for (int i=0; i < NUM_THREADS; i++) {
     if((pthread_join(threads[i], NULL) != 0)){
@@ -107,7 +108,7 @@ int main(){
 
  
 
-  
+  //join for second thread
 
   for (int i=0; i < NUM_THREADS; i++) {
     if((pthread_join(threads2[i], NULL) != 0)){
