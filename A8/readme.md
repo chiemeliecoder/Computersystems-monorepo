@@ -110,4 +110,6 @@ Implementing thread-safe memory allocation can be complex and time-consuming, bu
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 6. How to run
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Please use make to run file it would give you a pm_thread that would give you both threads running.
+Please use make to run file it would give you a pm_thread that would give you both threads running. You will end up getting the same answer yo can try running it on replit to get various iteration of the code.
+
+https://replit.com/
