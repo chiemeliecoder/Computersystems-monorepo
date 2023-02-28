@@ -83,6 +83,63 @@ Object* new_object() {
     return obj;
 }
 
+typedef struct _Object {
+    int marked;
+    struct _Object* next;
+    // other fields
+} Object;
+
+typedef struct {
+    Object* head;
+    int size;
+} Heap;
+
+
+Object* new_object(Heap* heap, /* other allocation parameters */) {
+    Object* obj = malloc(sizeof(Object));
+    obj->marked = 0;
+    obj->next = heap->head;
+    heap->head = obj;
+    heap->size += sizeof(Object);
+    // other initialization code
+    return obj;
+}
+
+void mark(Object* obj) {
+    if (obj && !obj->marked) {
+        obj->marked = 1;
+        // mark any other reachable objects
+        mark(obj->field1);
+        mark(obj->field2);
+        // ...
+    }
+}
+
+void sweep(Heap* heap) {
+    Object** obj = &heap->head;
+    while (*obj) {
+        if (!(*obj)->marked) {
+            // deallocate the object
+            Object* unreached = *obj;
+            *obj = unreached->next;
+            heap->size -= sizeof(Object);
+            free(unreached);
+        } else {
+            // unmark the object for the next GC cycle
+            (*obj)->marked = 0;
+            obj = &(*obj)->next;
+        }
+    }
+}
+
+void garbage_collect(Heap* heap) {
+    mark(root1);
+    mark(root2);
+    // ...
+    sweep(heap);
+}
+
+
 void delete_object(Object* obj) {
     obj->refcount--;
     if (obj->refcount == 0) {
