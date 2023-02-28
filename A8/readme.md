@@ -90,8 +90,24 @@ void thread_malloc_free(void *ptr){
   printf("memeory pool doesnt support free");
 }
 ```
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 5. More information
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+To ensure that the heap does not get corrupted when allocations are done by multiple concurrently executing threads, we need to implement thread-safe memory allocation in your program. Here are the steps: 
+
+Implement locking: The first step to ensure thread-safe memory allocation is to implement locking. Use mutexes to ensure that only one thread at a time can allocate or deallocate memory. You can use operating system-specific locking mechanisms or libraries such as pthreads to implement locking. 
+
+Use thread-local storage: To avoid contention on the heap, you can use thread-local storage (TLS) to allocate memory that is specific to each thread. TLS allows each thread to have its own private memory pool that it can use for allocations without interfering with other threads. (I couldn't implement as clang doesnt support it)
+
+Use memory pools: Another way to avoid contention on the heap is to use memory pools. A memory pool is a pre-allocated block of memory that is divided into fixed-size chunks. Each thread can allocate and deallocate memory from its own memory pool without interfering with other threads. (I couldn't implement as clang doesnt support it)
+
+Implement garbage collection: Garbage collection is a technique used in some programming languages to automatically deallocate memory that is no longer being used. By implementing garbage collection, you can avoid memory leaks and reduce the risk of heap corruption. 
+
+Test thoroughly
+
+Implementing thread-safe memory allocation can be complex and time-consuming, but it is essential to ensure a yor program is reliable and free from memory corruption issues. 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# 5. How to run
+# 6. How to run
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Please use make to run file it would give you a pm_thread that would give you both threads running.
