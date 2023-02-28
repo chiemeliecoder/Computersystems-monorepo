@@ -83,7 +83,7 @@ int main(){
   printf("=======================================================================\n");
 
 
-  //this thread would run with thread 1 but the issue is that due to no memory it could come up with an exit 1 or segmentation fault due to no memeory management
+  //this thread would run with thread 1 but the issue is that due to poor memory management it could come up with an exit 1 or segmentation fault due to poor memeory management
   //creating second thread
   for(int i = 0; i < NUM_THREADS; i++){
     printf("=======================unitTestforthreadfunc%d=====================\n",i);
