@@ -69,3 +69,8 @@ We need to try a few things like:
 # 4.  Issues and Bugs
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 To improve the performance of my malloc I wasnt able to create large and small allocations functions so as to set the M_MMAP_THRESHOLD and make changes to the MALLOC_TRIM_THRESHOLD variables. Also due to poor memory the thread 2 could can create an exit 1 or segmentation fault due to poor memeory management
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 5. How to run
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Please use make to run file it would give you a pm_thread that would give you both threads running.
