@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <mcheck.h>
+#include <assert.h>
 #include <pthread.h>
 #include "malloc.h"
 #include "threadmalloc.h"
@@ -9,17 +11,16 @@
 
 struct block* heap;
 
-void* thread_func(void* arg) {
-    for (int i = 0; i < NUM_ITEMS; i++) {
-        size_t size = rand() % 100 + 1;
-        void* ptr = MALLOC(size);
-        if (ptr == NULL) {
-            fprintf(stderr, "Error: failed to allocate memory\n");
-            exit(EXIT_FAILURE);
-        }
-        FREE(ptr);
-    }
-    return NULL;
+void* thread_func() {
+  size_t size = rand() % 100 + 1;
+  void* ptr = MALLOC(size);
+  if (ptr == NULL) {
+      fprintf(stderr, "Error: failed to allocate memory\n");
+      exit(EXIT_FAILURE);
+  }
+  
+  FREE(ptr);
+  return NULL;
 }
 
 
@@ -60,6 +61,7 @@ void unitTest1(){
 int main(){
 
   
+  
 
   printf("before threading and concurrency\n");
  
@@ -77,6 +79,8 @@ int main(){
   printf("                      First threading set is done                      \n");
   printf("=======================================================================\n");
 
+
+  //this thread would run with thread 1 but the issue is that due to no memory it could come up with an exit 1 or segmentation fault due to no memeory management
 
   for(int i = 0; i < NUM_THREADS; i++){
     printf("=======================unitTestforthreadfunc%d=====================\n",i);
@@ -109,7 +113,7 @@ int main(){
     }
     
   }
-    
+
   //a check that forms of heap corruption are handled
 
   size_t size = 12;
@@ -121,9 +125,12 @@ int main(){
 
   
   printf("after concurrency has occured\n");
+  
 
   
   pthread_exit(NULL);
+
+  
   return 0;
 
 
