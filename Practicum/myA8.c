@@ -152,6 +152,37 @@ void add_reference(Object* obj) {
     obj->refcount++;
 }
 
+int main() {
+    // Initialize the heap
+    Heap heap;
+    heap.head = NULL;
+    heap.size = 0;
+
+    // Allocate some objects
+    Object* obj1 = new_object(&heap);
+    Object* obj2 = new_object(&heap);
+    obj1->field1 = obj2;
+    obj2->field1 = obj1;
+
+    // Perform a garbage collection cycle
+    garbage_collect(&heap);
+
+    // Allocate some more objects
+    Object* obj3 = new_object(&heap);
+    Object* obj4 = new_object(&heap);
+    obj3->field1 = obj4;
+    obj4->field1 = obj3;
+
+    // Perform another garbage collection cycle
+    garbage_collect(&heap);
+
+    // Free the heap
+    sweep(&heap);
+
+    return 0;
+}
+
+
 
 //Test thoroughly: It is important to thoroughly test your program to ensure that it is thread-safe. Test your program with multiple threads and allocate and deallocate memory in different patterns to ensure that there are no race conditions or deadlocks.
 
