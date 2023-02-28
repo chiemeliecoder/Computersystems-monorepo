@@ -113,3 +113,9 @@ Implementing thread-safe memory allocation can be complex and time-consuming, bu
 Please use make to run file it would give you a pm_thread that would give you both threads running. You will end up getting the same answer yo can try running it on replit to get various iteration of the code.
 
 https://replit.com/
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 7. Resources
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+https://sourceware.org/glibc/wiki/MallocInternals
+https://developers.redhat.com/blog/2017/03/02/malloc-internals-and-you
