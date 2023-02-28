@@ -230,3 +230,126 @@ int main() {
 //The pthread_join function is used to wait for the threads to finish executing. It takes the thread ID as its argument and returns when the thread has completed its execution.
 
 //Note that in this example, the threads are executed sequentially, meaning that one thread has to complete its execution before the next thread starts executing. To run threads concurrently, you would need to use synchronization techniques such as mutexes and condition variables.
+
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <pthread.h>
+
+#define HEAP_SIZE 10000
+
+typedef struct _object {
+    struct _object* next;
+    int marked;
+} Object;
+
+typedef struct _heap {
+    Object* head;
+    int size;
+    pthread_mutex_t lock;
+} Heap;
+
+Heap heap;
+
+void* gc_thread(void* args) {
+    // Wait for the main thread to signal that garbage collection is needed
+    pthread_mutex_lock(&heap.lock);
+    pthread_mutex_unlock(&heap.lock);
+
+    // Mark all objects in the heap
+    Object* obj = heap.head;
+    while (obj != NULL) {
+        obj->marked = 1;
+        obj = obj->next;
+    }
+
+    // Free all unmarked objects
+    obj = heap.head;
+    Object* prev = NULL;
+    while (obj != NULL) {
+        if (!obj->marked) {
+            if (prev == NULL) {
+                heap.head = obj->next;
+            } else {
+                prev->next = obj->next;
+            }
+            free(obj);
+            heap.size--;
+        } else {
+            obj->marked = 0;
+            prev = obj;
+        }
+        obj = obj->next;
+    }
+
+    // Signal that garbage collection is complete
+    pthread_mutex_unlock(&heap.lock);
+
+    return NULL;
+}
+
+Object* new_object() {
+    Object* obj = malloc(sizeof(Object));
+    if (obj == NULL) {
+        // Handle allocation failure
+        exit(1);
+    }
+    obj->next = heap.head;
+    obj->marked = 0;
+    heap.head = obj;
+    heap.size++;
+    return obj;
+}
+
+void* allocate(size_t size) {
+    pthread_mutex_lock(&heap.lock);
+    void* p = malloc(size);
+    pthread_mutex_unlock(&heap.lock);
+    return p;
+}
+
+void collect_garbage() {
+    // Signal the garbage collection thread to start
+    pthread_mutex_unlock(&heap.lock);
+
+    // Wait for the garbage collection thread to complete
+    pthread_mutex_lock(&heap.lock);
+}
+
+int main() {
+    // Initialize the heap
+    heap.head = NULL;
+    heap.size = 0;
+    pthread_mutex_init(&heap.lock, NULL);
+
+    // Start the garbage collection thread
+    pthread_t gc_thread_id;
+    pthread_create(&gc_thread_id, NULL, gc_thread, NULL);
+
+    // Allocate some objects
+    Object* obj1 = new_object();
+    Object* obj2 = new_object();
+    obj1->next = obj2;
+
+    // Perform garbage collection
+    collect_garbage();
+
+    // Allocate some more objects
+    Object* obj3 = new_object();
+    Object* obj4 = new_object();
+    obj3->next = obj4;
+
+    // Perform garbage collection
+    collect_garbage();
+
+    // Free the heap
+    Object* obj = heap.head;
+    while (obj != NULL) {
+        Object* next = obj->next;
+        free(obj);
+        obj = next;
+    }
+    pthread_mutex_destroy(&heap.lock);
+
+    return 0;
+}
