@@ -99,3 +99,46 @@ void add_reference(Object* obj) {
 //Test thoroughly: It is important to thoroughly test your program to ensure that it is thread-safe. Test your program with multiple threads and allocate and deallocate memory in different patterns to ensure that there are no race conditions or deadlocks.
 
 //Implementing thread-safe memory allocation can be complex and time-consuming, but it is essential to ensure that your program is reliable and free from memory corruption issues.
+
+
+#include <pthread.h>
+#include <stdio.h>
+
+// Function executed by each thread
+void *thread_function(void *arg) {
+    int thread_id = *(int *)arg;
+    printf("Thread %d is running\n", thread_id);
+    // Other thread code here
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t threads[5];
+    int thread_args[5];
+    int i;
+
+    // Create threads
+    for (i = 0; i < 5; i++) {
+        thread_args[i] = i;
+        if (pthread_create(&threads[i], NULL, thread_function, &thread_args[i])) {
+            fprintf(stderr, "Error creating thread %d\n", i);
+            return 1;
+        }
+    }
+
+    // Wait for threads to finish
+    for (i = 0; i < 5; i++) {
+        if (pthread_join(threads[i], NULL)) {
+            fprintf(stderr, "Error joining thread %d\n", i);
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+//In this example, the pthread_create function is used to create five threads, each of which executes the thread_function function. The thread_args array is used to pass arguments to the thread functions. Each thread is identified by a unique integer thread ID.
+
+//The pthread_join function is used to wait for the threads to finish executing. It takes the thread ID as its argument and returns when the thread has completed its execution.
+
+//Note that in this example, the threads are executed sequentially, meaning that one thread has to complete its execution before the next thread starts executing. To run threads concurrently, you would need to use synchronization techniques such as mutexes and condition variables.
