@@ -11,6 +11,8 @@
 
 struct block* heap;
 
+/**created a thread function for unittest 8  to create a random sizes to malloc then creating a void pointer to malloc the random size and also to check if the pointer is null and then free the pointer and return null I used this function to create concurrency between the two functions MALLOC and FREE trying to do both in the same function.**/
+
 void* thread_func() {
   size_t size = rand() % 100 + 1;
   void* ptr = MALLOC(size);
@@ -23,6 +25,7 @@ void* thread_func() {
   return NULL;
 }
 
+//This unit test will create a segmentation fault or exit 1 due to no memeory allocation
 
 void unitTest8(){
    //normal allocation and deallocation where it checks the memory to see if there is any chunk of memory that would for what I requested for exactly. Memory is initialized then split to fit 
