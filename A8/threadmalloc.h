@@ -30,5 +30,11 @@ struct malloc_list {
 
 struct malloc_list* malloc_items[NUM_THREADS * NUM_ITEMS];
 
+// total arena size allocated in bytes.
+unsigned long total_arena_size_allocated = 0;
+
+// total size allocated through mmap system call.
+unsigned long total_mmap_size_allocated = 0;
+
 void* lets_allocate(int thread_id);
 void *allocate(void *arg);
