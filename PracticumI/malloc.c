@@ -10,11 +10,22 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
+char phys_mem[PAGE_SIZE];
+
+char *physical_memory = phys_mem;
+
+struct block *freeList = (struct block *)phys_mem;
+
+int swap_fd;
+
+page_status_t pageing[NUM_PAGES];
+
 void init() { 
   freeList->size=PAGE_SIZE-sizeof(struct block);
   freeList->free=1;//this a flag c
   freeList->next=NULL;
 
+  PageTable p;
   // Initialize swap file
   swap_fd = open(SWAP_FILE, O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
   if (swap_fd == -1) {
@@ -25,7 +36,9 @@ void init() {
       perror("Failed to resize swap file");
       exit(1);
   }
-  memset(pages, 0, sizeof(pages));
+  memset(p.pages, 0, NUM_PAGES * sizeof(page_status_t));
+  
+  
 }
 
 void frag(void *slot, size_t size) { 
@@ -259,22 +272,22 @@ void *access_tracker(void *arg){
 
 // Function to get the status of a page
 bool is_page_used(uint8_t page_num){
-  return pages[page_num].status & USEDBIT; 
+  return pageing[page_num].status & USEDBIT; 
   printf("1");
 }
 
 bool is_page_dirty(uint8_t page_num){
-  return pages[page_num].status & DIRTYBIT; 
+  return pageing[page_num].status & DIRTYBIT; 
   printf("1");
 }
 
 // Function to set the status of a page
 void set_page_used(uint8_t page_num, bool used){
   if (used) {
-    pages[page_num].status |= USEDBIT; 
+    pageing[page_num].status |= USEDBIT; 
 
   }else{
-    pages[page_num].status &= ~USEDBIT; 
+    pageing[page_num].status &= ~USEDBIT; 
 
   } 
   //printf("1");
@@ -282,10 +295,10 @@ void set_page_used(uint8_t page_num, bool used){
 
 void set_page_dirty(uint8_t page_num, bool dirty){
   if (dirty) {
-    pages[page_num].status |= DIRTYBIT; 
+    pageing[page_num].status |= DIRTYBIT; 
 
   }else{
-    pages[page_num].status &= ~DIRTYBIT; 
+    pageing[page_num].status &= ~DIRTYBIT; 
 
   }
   
