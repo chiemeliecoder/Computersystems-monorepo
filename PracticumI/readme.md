@@ -12,3 +12,5 @@ The code defines a bitfield struct to store used and dirty status of a page, as 
 
 The code includes a mymalloc.h header file and initializes a mutex variable for thread synchronization. The init function initializes the freeList struct and opens the swap file. The frag function is used to split a block of memory into two smaller blocks if the memory is too large for the requested size. The allocate_page function allocates a physical memory page and maps it to a virtual page.
 
+Overall, the code establishes memory management, including allocation and swapping pages in and out of physical memory
+
