@@ -28,20 +28,27 @@
 
 #define NUM_PAGES 16
 
-// Pre-allocate your "heap" memory from the static store
-
-char phys_mem[PAGE_SIZE];
+// Define the number of bytes to allocate for each malloc 
+#define ALLOC_SIZE 256 
+ 
+// Define the number of mallocs to perform 
+#define NUM_MALLOCS 10
 
 
 // Define swap file name
 
 #define SWAP_FILE "swapfile"
 
+
+// Pre-allocate your "heap" memory from the static store
+
+extern char phys_mem[PAGE_SIZE];
+
 // Define physical memory and swap file descriptors
 
-char *physical_memory = phys_mem;
+extern char *physical_memory;
 
-int swap_fd;
+extern int swap_fd;
 
 struct block {
 
@@ -56,7 +63,7 @@ struct block {
 // Pointing to the main block of memory which is initially free no storage
 // allocation yet
 
-struct block *freeList = (struct block *)phys_mem;
+extern struct block *freeList;
 
 typedef struct {
 
@@ -80,7 +87,7 @@ typedef struct {
 } page_status_t;
 
 // Global array of pages
-page_status_t pages[NUM_PAGES];
+extern page_status_t pageing[NUM_PAGES];
 
 typedef union {
     int i;
@@ -108,10 +115,10 @@ typedef struct access_tracker {
 
 } access_tracker_t; 
 
-access_tracker_t access_tracker = {
-    .pages = NULL,
-    .num_pages = NUM_PAGES,
-};
+// access_tracker_t access_tracker = {
+//     .pages = NULL,
+//     .num_pages = NUM_PAGES,
+// };
 
 void init();
 
