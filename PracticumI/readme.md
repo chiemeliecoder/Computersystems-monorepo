@@ -14,7 +14,11 @@ The code includes a mymalloc.h header file and initializes a mutex variable for 
 
 Overall, the code establishes memory management, including allocation and swapping pages in and out of physical memory
 
+the swap file shows 
 
+```c
+-rw------- 1 root root 677570560 Mar 21 21:15 /swapfile
+```
 To handle the swap file
 ```c
 sudo fallocate -l 1G /swapfile
@@ -50,5 +54,5 @@ UUID=4cf1eff4-dd69-40ce-8f0a-cd53ed08847b /               ext4    errors=remount
 # /boot/efi was on /dev/sda1 during installation
 UUID=4B71-F283  /boot/efi       vfat    umask=0077      0       1
 /swapfile                                 none            swap    sw              0       0
-```
+``i`
 
