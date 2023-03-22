@@ -34,6 +34,9 @@
 // Define the number of mallocs to perform 
 #define NUM_MALLOCS 10
 
+//used for a test case in main
+#define LOOP_COUNT 1000000 
+
 
 // Define swap file name
 
@@ -71,6 +74,9 @@ typedef struct {
 
   int last_access_time; // time when page was last accessed
 
+   bool resident; // indicates whether the page is resident in physical memory or not 
+  int disk_location; // the location of the page in the swap file when it is swapped out
+
 } Page;
 
 typedef struct {
@@ -91,7 +97,7 @@ extern page_status_t pageing[NUM_PAGES];
 
 typedef union {
     int i;
-    char c[3];
+    char c[4];
     struct {
         bool allocated : 1;
         bool resident : 1;
@@ -130,6 +136,8 @@ void pm_free_lock(void *ptr);
 
 void mergefrag();
 
+void *allocate_page(int page_num);
+
 void read_page(int page_num, char *buf);
 
 void write_page(int page_num, char *data);
@@ -155,3 +163,9 @@ bool is_page_dirty(uint8_t page_num);
 void set_page_used(uint8_t page_num, bool used);
 
 void set_page_dirty(uint8_t page_num, bool dirty);
+
+//check if the page is in memeory
+bool is_page_in_memory(PageTable *page_table, int page_id);
+
+//To replace some other page in physical memory with the page being loaded
+int replace_page(PageTable *page_table, int page_id);
