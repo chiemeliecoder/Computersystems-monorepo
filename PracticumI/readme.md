@@ -1,5 +1,9 @@
 Practicum I
 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 1 introduction and explanation of code
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 The given code covers the requirement to build a program-managed heap that allows programs to allocate memory from that heap. The code defines a struct called block that stores metadata about the allocated blocks of memory, and uses a linked list of block structs to keep track of free memory.
 
 The code also defines a function pm_malloc_lock that allocates memory from the program-managed heap. 
@@ -14,8 +18,10 @@ The code includes a mymalloc.h header file and initializes a mutex variable for 
 
 Overall, the code establishes memory management, including allocation and swapping pages in and out of physical memory
 
-the swap file shows 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#3 to handle the swap file
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+My swap file on my desktop shows this 
 ```c
 -rw------- 1 root root 677570560 Mar 21 21:15 /swapfile
 ```
@@ -70,5 +76,30 @@ If it's being used, you'll need to turn off the swap space first by running `sud
 Then, you can run the `sudo mkswap /swapfile` command again to create the swap space. Once the swap space is created, you can turn it back on by running `sudo swapon /swapfile`. 
 
 Enable the swap file: You can use the command `sudo swapon /swapfile` to enable the swap file. 
+
+here are pictures to help with handling swapfiles
+![swaponandoff](https://user-images.githubusercontent.com/77821039/226798043-d3112f7b-f782-4df0-9412-a7c65cf04ea6.PNG)
+
+![swappinfile](https://user-images.githubusercontent.com/77821039/226798063-6a3aa244-2a48-46e7-a573-da9827c4fb4a.PNG)
+
+![prevfiledate](https://user-images.githubusercontent.com/77821039/226798022-109ff2c4-1756-452e-be29-f6ac22a824bf.PNG)
+
+![ismounted](https://user-images.githubusercontent.com/77821039/226797999-b2a480c3-63ef-4b6c-91ea-d9e42581b6ab.PNG)
+
+![changeinswapfile date](https://user-images.githubusercontent.com/77821039/226797978-acfbe3e0-745a-4fbe-a42a-442ef3e4198c.PNG)
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 3 Tests
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+first test unit test 1 checks memeory allocation that is it allocates memory equal to the size of a single page and read/write data from/to that memory location. 
+
+second test unit test 1 checks memeory allocation that is it allocates more memory than the size of the physical memory and verify that the page is swapped to virtual memory and can still be read/written to. 
+
+fourth test unit test 1 checks memeory  allocation  and free that is it allocates memory and free it, then try to read/write from the freed memory location and ensure that it results in an error. 
+
+The fifth test the page replacement algorithm by allocating more memory than the size of the physical memory and accessing different pages to verify that the least recently used page is swapped to virtual memory. 
+
+I also tested the thread-safety of the program-managed heap by allocating and freeing memory from multiple threads simultaneously. 
 
 a segmentation error would occur in my test 4 as my unit test 4 is used to Allocate memory and free it, then try to read/write from the freed memory location and ensure that it results in an error
