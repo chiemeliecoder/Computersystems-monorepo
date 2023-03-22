@@ -30,4 +30,9 @@ If the swap file is not listed you can do it manually with
 ```c
 sudo swapon /swapfile
 ```
+```c
+it would show 
+Filename				Type		Size	Used	Priority
+/swapfile                              	file    	661684	0	-2
+```
 
