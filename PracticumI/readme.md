@@ -14,3 +14,20 @@ The code includes a mymalloc.h header file and initializes a mutex variable for 
 
 Overall, the code establishes memory management, including allocation and swapping pages in and out of physical memory
 
+
+To handle the swap file
+```c
+sudo fallocate -l 1G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+```
+Check if the swap file is mounted by running the following command
+```c
+swapon -s
+```
+If the swap file is not listed you can do it manually with 
+```c
+sudo swapon /swapfile
+```
+
