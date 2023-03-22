@@ -69,6 +69,4 @@ If it's being used, you'll need to turn off the swap space first by running `sud
 
 Then, you can run the `sudo mkswap /swapfile` command again to create the swap space. Once the swap space is created, you can turn it back on by running `sudo swapon /swapfile`. 
 
- 
-
 Enable the swap file: You can use the command `sudo swapon /swapfile` to enable the swap file. 
