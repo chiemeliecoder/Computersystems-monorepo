@@ -54,10 +54,10 @@ UUID=4cf1eff4-dd69-40ce-8f0a-cd53ed08847b /               ext4    errors=remount
 # /boot/efi was on /dev/sda1 during installation
 UUID=4B71-F283  /boot/efi       vfat    umask=0077      0       1
 /swapfile                                 none            swap    sw              0       0
-``i`
+```
 
 So to work with the swapfile you use this instructions below 
-Tp check if the swap file exists: You can use the command ```ls -lh /swapfile``` to check if the swap file exists. If it does not exist, you can create it using the command sudo fallocate -l 1G /swapfile. 
+Tp check if the swap file exists: You can use the command `ls -lh /swapfile` to check if the swap file exists. If it does not exist, you can create it using the command sudo fallocate -l 1G /swapfile. 
 
 Set the correct permissions for the swap file: You can use the command sudo chmod 600 /swapfile to set the correct permissions for the swap file. 
 
