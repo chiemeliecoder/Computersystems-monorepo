@@ -37,3 +37,18 @@ Filename				Type		Size	Used	Priority
 /swapfile                              	file    	661684	0	-2
 ```
 
+```c
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sda5 during installation
+UUID=4cf1eff4-dd69-40ce-8f0a-cd53ed08847b /               ext4    errors=remount-ro 0       1
+# /boot/efi was on /dev/sda1 during installation
+UUID=4B71-F283  /boot/efi       vfat    umask=0077      0       1
+/swapfile                                 none            swap    sw              0       0
+```
+
