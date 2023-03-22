@@ -71,4 +71,4 @@ Then, you can run the `sudo mkswap /swapfile` command again to create the swap s
 
  
 
-Enable the swap file: You can use the command sudo swapon /swapfile to enable the swap file. 
+Enable the swap file: You can use the command `sudo swapon /swapfile` to enable the swap file. 
