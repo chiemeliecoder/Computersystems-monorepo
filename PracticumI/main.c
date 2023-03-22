@@ -99,28 +99,8 @@ void unitTest2(){
   printf("Test passed.\n"); 
 }
 
-// void unitTest1(){
-  
-//    //normal allocation and deallocation where it checks the memory to see if there is any chunk of memory that would for what I requested for exactly. Memory is initialized then split to fit 
-//   int *p= (int)pm_malloc_lock(100*sizeof(int));
-//   char *q= (char)pm_malloc_lock(250*sizeof(char));
-//   int *r= (int)pm_malloc_lock(1000*sizeof(int));
-  
-//   pm_free_lock(p);
-//   char *w= (char)pm_malloc_lock(700);
-  
-//   pm_free_lock(r);
-//   int *k= (int)pm_malloc_lock(500*sizeof(int));
-//   printf("Allocation and deallocation is done successfully for unitTest 1!\n");
-  
-// }
 
-// void unitTest2(){
-//   PageTable page_table;
-//   init_page_table(&page_table, NUM_PAGES);
-//   load_page(&page_table, 1, 1); // load page 1 into memory at time 1 
-//   load_page(&page_table, 2, 2); // load page 2 into memory at time 2 
-// }
+
 
 
 void unitTest3(){
@@ -175,6 +155,8 @@ void unitTest3(){
   unlink(SWAP_FILE); 
 }
 
+
+//to Allocate memory and free it, then try to read/write from the freed memory location and ensure that it results in an error
 void unitTest4(){
   // Allocate memory 
 
@@ -214,6 +196,8 @@ void simulate_page_access(int num_pages, int* page_refs, int page_size, char* pm
     }
 }
 
+
+//I tested the page's replacement algorithm by allocating more memory than the size of the physical memory and accessing different pages to verify that the least recently used page is swapped to virtual memory. 
 
 void unitTest5() { 
   
@@ -312,17 +296,20 @@ void *thread_func(void *arg) {
 
 
 
+
+
+
+
 pthread_t threads[NUM_THREADS];
 pthread_t threads2[NUM_THREADS];
+pthread_t threads3[NUM_THREADS];
+pthread_t threads4[NUM_THREADS];
 int  thread_id[NUM_THREADS];
 
 pthread_barrier_t barry;
 
-int main() { 
+int main() {
 
-  unitTest1();
-  printf("************second test******************");
-  unitTest2();
   
   printf("before threading and concurrency\n");
  
@@ -330,7 +317,7 @@ int main() {
   pthread_barrier_init(&barry, NULL, NUM_THREADS);
 
   for (int i=0; i < NUM_THREADS; i++) {
-    printf("=======================unitTest%d=====================\n",i);
+    printf("=======================unitTestforthreadfunc%d=====================\n",i);
     thread_id[i] = i;
     if(pthread_create(&threads[i], NULL, thread_func,NULL)!= 0){
       perror("pthread_create"); 
@@ -339,17 +326,93 @@ int main() {
     }
   
   }
-  printf("Hello World\n");
+
+ 
+
+  for (int i=0; i < NUM_THREADS; i++) {
+    printf("=======================unitTestforunitest1:%d=====================\n",i);
+    thread_id[i] = i;
+    if(pthread_create(&threads[i], NULL, unitTest1,NULL)!= 0){
+      perror("pthread_create"); 
+
+      exit(1); 
+    }
+  
+  }
+  
+  for (int i=0; i < NUM_THREADS; i++) {
+    printf("=======================unitTestforunitest2:%d=====================\n",i);
+    thread_id[i] = i;
+    if(pthread_create(&threads2[i], NULL, unitTest2,NULL)!= 0){
+      perror("pthread_create"); 
+
+      exit(1); 
+    }
+  
+  }
+
+  for (int i=0; i < NUM_THREADS; i++) {
+    printf("=======================unitTestforunitest5:%d=====================\n",i);
+    thread_id[i] = i;
+    if(pthread_create(&threads3[i], NULL, unitTest5,NULL)!= 0){
+      perror("pthread_create"); 
+
+      exit(1); 
+    }
+  
+  }
+
+  for (int i=0; i < NUM_THREADS; i++) {
+    printf("=======================unitTestforunitest4:%d=====================\n",i);
+    thread_id[i] = i;
+    if(pthread_create(&threads4[i], NULL, unitTest4,NULL)!= 0){
+      perror("pthread_create"); 
+
+      exit(1); 
+    }
+  
+  }
+ 
 
   //join for first thread
 
   for (int i=0; i < NUM_THREADS; i++) {
-    if((pthread_join(threads[i], NULL) != 0)){
+    if((pthread_join(threads2[i], NULL) != 0)){
       fprintf(stderr, "Error: failed to join thread\n");
       exit(EXIT_FAILURE);
     }
     
   }
+
+  for (int i=0; i < NUM_THREADS; i++) {
+    if((pthread_join(threads3[i], NULL) != 0)){
+      fprintf(stderr, "Error: failed to join thread\n");
+      exit(EXIT_FAILURE);
+    }
+    
+  }
+
+  for (int i=0; i < NUM_THREADS; i++) {
+    if((pthread_join(threads4[i], NULL) != 0)){
+      fprintf(stderr, "Error: failed to join thread\n");
+      exit(EXIT_FAILURE);
+    }
+    
+  }
+
+  
+
+  //a check that forms of heap corruption are handled
+
+  size_t size = 12;
+  void *mems = pm_malloc_lock(size);
+  printf("Successfully malloc'd %zu bytes at addr %p\n", size, mems);
+  assert(mems != NULL);
+  pm_free_lock(mems);
+  printf("Successfully free'd %zu bytes from addr %p\n", size, mems);
+
+  
+  printf("after concurrency has occured\n");
 
   pthread_exit(NULL);
   return 0;
