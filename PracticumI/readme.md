@@ -57,15 +57,17 @@ UUID=4B71-F283  /boot/efi       vfat    umask=0077      0       1
 ```
 
 So to work with the swapfile you use this instructions below 
-Tp check if the swap file exists: You can use the command `ls -lh /swapfile` to check if the swap file exists. If it does not exist, you can create it using the command sudo fallocate -l 1G /swapfile. 
+Tp check if the swap file exists: You can use the command `ls -lh /swapfile` to check if the swap file exists. If it does not exist, you can create it using the command `sudo fallocate -l 1G /swapfile`.
 
-Set the correct permissions for the swap file: You can use the command sudo chmod 600 /swapfile to set the correct permissions for the swap file. 
+Set the correct permissions for the swap file: You can use the command `sudo chmod 600 /swapfile` to set the correct permissions for the swap file. 
 
-Activate the swap file: You can use the command sudo mkswap /swapfile to activate the swap file. an error would occur  
+Activate the swap file: You can use the command `sudo mkswap /swapfile` to activate the swap file. an error would occur  
 
-This error message indicates that the /swapfile is already being used as a swap space. You can check if it's currently in use by running the command sudo swapon -s. 
+This error message indicates that the /swapfile is already being used as a swap space. You can check if it's currently in use by running the command `sudo swapon -s`. 
 
-If it's being used, you'll need to turn off the swap space first by running sudo swapoff /swapfile. Then, you can run the sudo mkswap /swapfile command again to create the swap space. Once the swap space is created, you can turn it back on by running sudo swapon /swapfile. 
+If it's being used, you'll need to turn off the swap space first by running `sudo swapoff /swapfile`. 
+
+Then, you can run the `sudo mkswap /swapfile` command again to create the swap space. Once the swap space is created, you can turn it back on by running `sudo swapon /swapfile`. 
 
  
 
