@@ -66,8 +66,15 @@ is a function for creating a virtual memory table, which is represented as an ar
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# 2 introduction and explanation of code
+# 2 Testcases
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+Error handled  
+
+If the allocation of memory has failed in the dramAllocate function, then the function will exit with an error message. The code you provided already has the proper error handling for this case, which is to print an error message and exit the program with a failure status. 
+
+If you want to handle this error in a different way, you could modify the error message or change the exit status. For example, you could change the exit status to a non-negative integer to indicate a specific error code. Or you could print a different error message to provide more information about the failure. 
+
+However, it's important to note that in most cases, the proper handling for a failed memory allocation is to exit the program with a failure status. This is because the program cannot continue to run without the required memory, and any further execution could result in undefined behavior or crashes. 
 
 
