@@ -78,6 +78,17 @@ If you want to handle this error in a different way, you could modify the error 
 
 However, it's important to note that in most cases, the proper handling for a failed memory allocation is to exit the program with a failure status. This is because the program cannot continue to run without the required memory, and any further execution could result in undefined behavior or crashes. 
 
+
+```c
+sudo fallocate -l 1G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+```
+Check if the swap file is mounted by running the following command
+```c
+
+
 ```
     tlbTable = createVMtable(TLB_SIZE); // The TLB Structure
     pageTable = createVMtable(PAGE_TABLE_SIZE); // The Page Table
