@@ -79,12 +79,6 @@ If you want to handle this error in a different way, you could modify the error 
 However, it's important to note that in most cases, the proper handling for a failed memory allocation is to exit the program with a failure status. This is because the program cannot continue to run without the required memory, and any further execution could result in undefined behavior or crashes. 
 
 
-```c
-sudo fallocate -l 1G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-```
 
 
 
@@ -183,8 +177,75 @@ sudo swapon /swapfile
 
 # The second test case thread_function
 
+
+The function is testing the thread-safe memory allocation and deallocation functions by creating multiple threads and having them allocate and free memory concurrently. Each thread is assigned a unique thread ID and allocates 10 bytes of memory using thread_safe_malloc(). It then prints the allocated memory address and frees the memory using thread_safe_free(). The function then exits the thread using pthread_exit(). The purpose of the test is to ensure that the memory allocation and deallocation functions are thread-safe and can be used safely in a multi-threaded environment without causing any memory corruption or other issues.
+
+```c
+void *thread_function(void *arg) {
+  int thread_id = *(int *)arg;
+  printf("Thread %d starting...\n", thread_id);
+  void *mem = thread_safe_malloc(10);
+  printf("Thread %d allocated memory at %p\n", thread_id, mem);
+  thread_safe_free(mem);
+  printf("Thread %d freeing memory at %p\n", thread_id, mem);
+  pthread_exit(NULL);
+}
+```
+
 # The thrid test case thread_func2
 
+
+The function thread_func2 is testing a variety of functionalities related to synchronization, memory management, and persistence:
+
+Synchronization: The function increments a shared integer variable shared_data by 1, which requires synchronization to avoid race conditions.
+Memory management: The function allocates and frees memory using thread_safe_malloc and thread_safe_free functions, respectively. It also uses pm_put and pm_get functions to write and read data from persistent memory.
+Persistence: The function saves a dirty page to disk using save_dirty_page_to_disk function, loads a page from disk using load_page_from_disk function, and swaps a page using swap_page function. These operations simulate the behavior of a memory management system with a page replacement policy that stores some pages on disk.
+
+
+```c
+int shared_data = 0;
+
+
+void *thread_func2(void *arg) {
+  int tid = *(int *)arg;
+  int data = tid + 1;
+
+  // Perform some work that requires synchronization
+  shared_data += 1;
+  printf("Thread %d incremented shared data to %d\n", tid, shared_data);
+ 
+
+  // Perform some memory-related work
+  int *ptr = (int *)thread_safe_malloc(sizeof(int));
+  *ptr = tid;
+  printf("Thread %d allocated memory at %p\n", tid, ptr);
+
+  // Save a dirty page to disk
+  save_dirty_page_to_disk(pageTab);
+
+  // Load a page from disk
+  int *page = load_page_from_disk(pageNumber);
+
+  // Swap a page
+  swap_page(pageNumber, phys_mem);
+
+  // Save a dirty page
+  save_dirty_page(pageNumber, (char *)page);
+
+  
+  pm_put(ptr, &data, sizeof(int));
+
+  // Retrieve data and print
+  int result = 0;
+  pm_get(ptr, &result, sizeof(int));
+  printf("Thread %d: data = %d\n", tid, result);
+
+  thread_safe_free(page);
+  thread_safe_free(ptr);
+  pthread_exit(NULL);
+}
+}
+```
 
 
 
