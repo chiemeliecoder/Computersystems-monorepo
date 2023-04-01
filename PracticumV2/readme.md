@@ -85,8 +85,7 @@ sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
 ```
-Check if the swap file is mounted by running the following command
-```c
+
 
 
 ```
