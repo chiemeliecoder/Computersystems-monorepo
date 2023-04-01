@@ -192,7 +192,7 @@ void *thread_function(void *arg) {
 }
 ```
 
-# The thrid test case thread_func2
+# The third test case thread_func2
 
 
 The function thread_func2 is testing a variety of functionalities related to synchronization, memory management, and persistence:
