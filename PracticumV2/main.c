@@ -92,9 +92,111 @@ int getOldestEntry(int tlbSize);
 double getAvgTimeInBackingStore();
 
 
+
+pthread_t threads[NUM_THREADS];
+pthread_t threads2[NUM_THREADS];
+
+int  thread_id[NUM_THREADS];
+
+void *thread_function(void *arg) {
+  int thread_id = *(int *)arg;
+  printf("Thread %d starting...\n", thread_id);
+  void *mem = thread_safe_malloc(10);
+  printf("Thread %d allocated memory at %p\n", thread_id, mem);
+  thread_safe_free(mem);
+  printf("Thread %d freeing memory at %p\n", thread_id, mem);
+  pthread_exit(NULL);
+}
+
+
+
+
+
+int shared_data = 0;
+
+
+void *thread_func2(void *arg) {
+  int tid = *(int *)arg;
+  int data = tid + 1;
+
+  // Perform some work that requires synchronization
+  shared_data += 1;
+  printf("Thread %d incremented shared data to %d\n", tid, shared_data);
+ 
+
+  // Perform some memory-related work
+  int *ptr = (int *)thread_safe_malloc(sizeof(int));
+  *ptr = tid;
+  printf("Thread %d allocated memory at %p\n", tid, ptr);
+
+  // Save a dirty page to disk
+  save_dirty_page_to_disk(pageTab);
+
+  // Load a page from disk
+  int *page = load_page_from_disk(pageNumber);
+
+  // Swap a page
+  swap_page(pageNumber, phys_mem);
+
+  // Save a dirty page
+  save_dirty_page(pageNumber, (char *)page);
+
+  
+  pm_put(ptr, &data, sizeof(int));
+
+  // Retrieve data and print
+  int result = 0;
+  pm_get(ptr, &result, sizeof(int));
+  printf("Thread %d: data = %d\n", tid, result);
+
+  thread_safe_free(page);
+  thread_safe_free(ptr);
+  pthread_exit(NULL);
+}
+
+
+
+
+
+
 // main opens necessary files and calls on translateAddress for every entry in the addresses file
 int main(int argc, char *argv[])
 {
+    for (int i = 0; i < NUM_THREADS; i++) {
+      thread_id[i] = i;
+      pthread_create(&threads[i], NULL, thread_function, &thread_id[i]);
+    }
+
+    for (int i = 0; i < NUM_THREADS; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    printf("======next thread for thread_func2========\n");
+     // Initialize page table and dirty bit array
+    memset(pageTab, -1, sizeof(pageTab));
+    memset(dirty, 0, sizeof(dirty));
+    
+    // Create threads
+    for (int i = 0; i < NUM_THREADS; i++) {
+        thread_id[i] = i;
+        if (pthread_create(&threads2[i], NULL, thread_func2, (void *)&thread_id[i]) != 0) {
+            fprintf(stderr, "Error creating thread %d\n", i);
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    // Join threads
+    for (int i = 0; i < NUM_THREADS; i++) {
+        if (pthread_join(threads2[i], NULL) != 0) {
+            fprintf(stderr, "Error joining thread %d\n", i);
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    
+    
+
+    printf("hello world!\n");
     tlbTable = createVMtable(TLB_SIZE); // The TLB Structure
     pageTable = createVMtable(PAGE_TABLE_SIZE); // The Page Table
     dram = dramAllocate(TOTAL_FRAME_COUNT, FRAME_SIZE); // Physical Memory
@@ -122,6 +224,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error opening %s. Expecting [InputFile].txt or equivalent.\n",argv[1]);
         return -1;
     }
+
 
     printf("\nWelcome to Don's VM Simulator Version 1.0");
     printf("\nNumber of logical pages: %d\nPage size: %d bytes\nPage Table Size: %d\nTLB Size: %d entries\nNumber of Physical Frames: %d\nPhysical Memory Size: %d bytes", PAGE_TABLE_SIZE, PAGE_READ_SIZE, PAGE_TABLE_SIZE, TLB_SIZE, FRAME_SIZE, PAGE_READ_SIZE * FRAME_SIZE);
