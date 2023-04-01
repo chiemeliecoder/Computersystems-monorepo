@@ -26,7 +26,37 @@ int pageNumber = 0;
 
 
 
+// The body of the function performs the following operations:
 
+// int prot = PROT_READ | PROT_WRITE;
+// This line sets the protection flags for the memory page to be allocated. In this case, the page is marked as readable and writable.
+
+// int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE | MAP_POPULATE;
+// This line sets the flags for the mmap system call. The MAP_PRIVATE flag ensures that changes to the memory page are not visible to other processes. The MAP_ANONYMOUS flag tells the system to allocate an anonymous memory region instead of mapping a file. The MAP_NORESERVE flag tells the system not to reserve swap space for the memory page. The MAP_POPULATE flag tells the system to prepopulate the memory page with zeros.
+
+// head = mmap(NULL, PAGE_SIZE, prot, flags, -1, 0);
+// This line calls the mmap system call to allocate a single memory page. The arguments are:
+
+// NULL: The address at which to start the mapping (the system will choose a suitable address).
+// PAGE_SIZE: The size of the memory page to be allocated.
+// prot: The protection flags for the memory page.
+// flags: The flags for the mmap system call.
+// -1: The file descriptor for the file to be mapped (not relevant for anonymous memory regions).
+// 0: The offset within the file to start the mapping (not relevant for anonymous memory regions).
+// if (head == MAP_FAILED) { perror("mmap failed"); exit(EXIT_FAILURE); }
+// This line checks if the mmap system call succeeded. If it failed, it prints an error message using perror and exits the program with a failure code.
+
+// for(int i = 0; i < NUM_PAGES; i++) { pageTab[i] = -1; }
+// This line initializes the page table by setting all entries to -1. The page table is an array that stores the index of the block that owns each page in the heap.
+
+// head->next = NULL;
+// This line initializes the head of the linked list by setting its next pointer to NULL. The head represents the entire heap.
+
+// head->free = 1;
+// This line sets the free flag of the head to 1, indicating that the entire heap is currently free.
+
+// head->size = PAGE_SIZE - sizeof(struct block);
+// This line sets the size of the head block to the size of the memory page minus the size of the block header. The block header contains metadata about the block, such as its size and whether it is free.
 
 
 void init_heap(){
@@ -50,7 +80,9 @@ void init_heap(){
 
 // Function to allocate a block of memory from the heap
 //the function is correctly allocating memory and handling page faults, and it returns a valid pointer to the allocated memory.
-void* thread_safe_malloc(size_t size) {
+ // thread_safe_malloc(), is a thread-safe memory allocation function that returns a pointer to a block of memory of the requested size. The function looks for a free block in a linked list of blocks. If a suitable block is found, it is split into two blocks if it is larger than the requested size. Otherwise, the block is marked as used and returned. If no suitable block is found, the function returns NULL. The function also checks if the requested memory is already in physical memory. If it is, it updates the referenced bit in the page table. If it is not, it allocates a new page and updates the page table.
+
+   void* thread_safe_malloc(size_t size) {
     static int pageNumber = 0;
     struct block *curr, *prev;
     void* result = NULL;
@@ -142,6 +174,8 @@ void* thread_safe_malloc(size_t size) {
 }     
 
 
+// The pm_put() function is used to store data in a block of memory allocated from the heap. It takes a pointer to the block, a pointer to the data to store, and the size of the data. The function first checks that the size of the data matches the size of the block. If it does, the function copies the data to the block.
+
 void pm_put(void *ptr, void *data, size_t size) {
     struct block *block_ptr = (struct block *) ptr - 1;
     if (block_ptr->size != size) {
@@ -149,15 +183,13 @@ void pm_put(void *ptr, void *data, size_t size) {
         return;
     }
     memcpy(block_ptr->data, data, size);
-
-    // // Mark the page as dirty
-    // int pageNum = (uintptr_t)block_ptr / PAGE_SIZE;
-    // dirty[pageNum] = 1;
 }
 
 
 
 // Function to free a block of memory allocated from the heap
+// The thread_safe_free() function frees a block of memory allocated from the heap. The function first checks if the block is dirty. If it is, the function saves the block to disk and clears the dirty flag for the page. The function then checks if there is enough disk space. Finally, the function removes the page from the page table.
+
 void thread_safe_free(void* ptr) {
     if (ptr == NULL) {
         return;
@@ -228,13 +260,16 @@ void thread_safe_free(void* ptr) {
 
 
 
+// the pm_get The function takes three parameters:
 
+// ptr: a void pointer to a block of memory
+// data: a void pointer to a block of memory where the retrieved data will be stored
+// size: the size of the data to be retrieved
+// The function retrieves data from a block of memory pointed to by ptr. The block of memory is assumed to have been previously allocated with malloc() and to contain a header struct block followed by the actual data. The header contains information about the size of the block and whether it is free or in use. If the size of the block does not match the size specified by the size parameter, an error message is printed and the function returns without retrieving the data.
 
+// If the block is marked as free, the function reads the page containing the data from a file on disk and stores it in the block's data field. The pageNum field of the block is used to determine which page to read.
 
-
-
-
-
+// Finally, the function copies the retrieved data to the memory pointed to by data using memcpy().
 
 
 void pm_get(void *ptr, void *data, size_t size) {
@@ -351,6 +386,10 @@ void displayTable(vmTable_t** tableToView)
     printf("\n********************* SEQUENCE END ***************************\n ");
 }
 
+
+//void save_dirty_page_to_disk(int** pageTable): This function takes in a two-dimensional integer array pageTable as input. The pageTable array represents a page table that stores the mappings between virtual and physical memory. The function saves the contents of a dirty page to disk by writing the page data to a file named DirtyFile.txt. It first retrieves the dirty page by accessing pageTable using the pageNumber parameter. It then opens the file in binary read/write mode and writes the page data to the file using fwrite(). The function then marks the page as clean by setting the corresponding dirty bit in the dirty array to 0.
+
+
 void save_dirty_page_to_disk(int** pageTable) {
     int* dirtyPage = pageTable[pageNumber]; 
     FILE* file = fopen("DirtyFile.txt", "rb+");
@@ -364,6 +403,9 @@ void save_dirty_page_to_disk(int** pageTable) {
     fclose(file);
     dirty[pageNumber] = 0; // mark page as clean
 }
+
+
+//int* load_page_from_disk(int pageNumber): This function takes in an integer pageNumber as input and returns a pointer to an integer array. The function loads a page from disk by reading the corresponding data from a file named testinput.txt. It first allocates memory for the page data using thread_safe_malloc() and opens the file in binary read mode. The function then reads the page data from the file using fread() and closes the file. The page data is returned as a pointer to an integer array.
 
 
 int* load_page_from_disk(int pageNumber) {
@@ -384,6 +426,9 @@ int* load_page_from_disk(int pageNumber) {
 }
 
 
+//void swap_page(int page_num, char* phys_mem): This function takes in an integer page_num and a pointer to a character array phys_mem as input. The function swaps a page from virtual memory to physical memory by mapping a new page to the current page number and unmapping the previous page. It first unmaps the page at the current page number using munmap() and then maps a new page to the current page number using mmap(). The function sets the protection flags to allow read and write access to the page, and sets the mapping flags to make the mapping private, anonymous, and non-reserved, and to populate the page with data.
+
+
 void swap_page(int page_num, char* phys_mem) {
     // unmap the page at the current page number
     if (munmap(phys_mem + page_num * PAGE_SIZE, PAGE_SIZE) < 0) {
@@ -400,6 +445,9 @@ void swap_page(int page_num, char* phys_mem) {
         exit(EXIT_FAILURE);
     }
 }
+
+
+//void save_dirty_page(int page_number, char* page_data): This function takes in an integer page_number and a pointer to a character array page_data as input. The function saves the contents of a dirty page to disk by writing the page data to a file named page_file. It first opens the file in write-only mode and writes the page data to the file using write(). The function then marks the page as clean by setting the corresponding dirty bit in the dirty array to 0.
 
 
 void save_dirty_page(int page_number, char* page_data) {
@@ -455,12 +503,6 @@ int** dramAllocate(int frameCount, int blockSize)
         }
         // Initialize memory to 0
         memset(temp[i], 0, blockSize * sizeof(int));
-        // else{
-        //   for(int j = 0; j < blockSize; j++) {
-        //     temp[i][j] = 0;
-        //   }
-          
-        // }
       
         
         
