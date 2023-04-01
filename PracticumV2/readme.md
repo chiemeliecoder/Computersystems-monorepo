@@ -171,6 +171,10 @@ However, it's important to note that in most cases, the proper handling for a fa
     freeDRAM(&dram, TOTAL_FRAME_COUNT);
 ```c
 
+# The second test case thread_function
+
+# The thrid test case thread_func2
+
 
 
 
