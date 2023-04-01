@@ -164,7 +164,7 @@ the code below handled error showing Error: Out of memory
     freeVMtable(&tlbTable);
     freeVMtable(&pageTable);
     freeDRAM(&dram, TOTAL_FRAME_COUNT);
-    ```c
+ ```c
 
 The allocation of memory has failed in the dramAllocate function, then the function will exit with an error message. The code you provided already has the proper error handling for this case, which is to print an error message and exit the program with a failure status. 
 
