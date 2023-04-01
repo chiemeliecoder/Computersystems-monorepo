@@ -88,7 +88,7 @@ sudo swapon /swapfile
 
 
 
-```
+```c
     tlbTable = createVMtable(TLB_SIZE); // The TLB Structure
     pageTable = createVMtable(PAGE_TABLE_SIZE); // The Page Table
     dram = dramAllocate(TOTAL_FRAME_COUNT, FRAME_SIZE); // Physical Memory
@@ -179,7 +179,7 @@ sudo swapon /swapfile
     freeVMtable(&tlbTable);
     freeVMtable(&pageTable);
     freeDRAM(&dram, TOTAL_FRAME_COUNT);
-```c
+```
 
 # The second test case thread_function
 
