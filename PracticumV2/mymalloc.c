@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+#include <assert.h>
 #include <sys/statvfs.h>
 #include <errno.h>
 
@@ -23,13 +24,10 @@ int dirty[NUM_PAGES];
 
 int pageNumber = 0;
 
-// char *physical_memory = phys_mem;
 
-// struct block *freeList = (struct block *)phys_mem;
 
-// int swap_fd;
 
-// page_status_t pageing[NUM_PAGES];
+
 
 void init_heap(){
   //head = (struct block*)heap;
@@ -40,12 +38,20 @@ void init_heap(){
     perror("mmap failed");
     exit(EXIT_FAILURE);
   }
+  // Initialize pageTab to -1
+  for(int i = 0; i < NUM_PAGES; i++) {
+    pageTab[i] = -1;
+  }
   head->next = NULL;
   head->free = 1;
   head->size = PAGE_SIZE - sizeof(struct block);
 }     
 
+
+// Function to allocate a block of memory from the heap
+//the function is correctly allocating memory and handling page faults, and it returns a valid pointer to the allocated memory.
 void* thread_safe_malloc(size_t size) {
+    static int pageNumber = 0;
     struct block *curr, *prev;
     void* result = NULL;
 
@@ -81,30 +87,59 @@ void* thread_safe_malloc(size_t size) {
         prev = curr;
         curr = curr->next;
     }
+  
+    // Check if a suitable block was found
+    if (result == NULL) {
+        pthread_mutex_unlock(&mutex);
+        return NULL;
+    }
+   
+
+    // Check if the requested memory is already in physical memory
+    int page_num = ((uintptr_t)result - (uintptr_t)phys_mem) / PAGE_SIZE;
+    if (page_num >= 0 && page_num < PAGE_SIZE && pageTab[page_num] != -1) {
+      // Page is already in physical memory, update referenced bit
+      struct page_table_entry *pte = page_table_head;
+      while (pte != NULL) {
+        if (pte->virtual_address == result) {
+          pte->referenced = 1;
+          break;
+        }
+        pte = pte->next;
+      }
+    } else if (page_num >= 0 && page_num < NUM_PAGES) {
+      // Page is not in physical memory, allocate a new page and update page table
+      void *page = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+      if (page == MAP_FAILED) {
+        perror("mmap failed");
+        exit(EXIT_FAILURE);
+      }
+      // printf("value %d\n", page_num);
+      // printf("value %d\n", NUM_PAGES);
+      // assert(page_num >= 0 && page_num < NUM_PAGES);
+
+      if (page_num < 0 || page_num >= NUM_PAGES) {
+        pthread_mutex_unlock(&mutex);
+        return NULL; // or return an appropriate error code
+      }
+
+      pageTab[page_num] = pageNumber;
+      pageNumber++;
+      dirty[page_num] = 0;
+      struct page_table_entry *pte = malloc(sizeof(struct page_table_entry));
+      pte->virtual_address = result;
+      pte->physical_address = page;
+      pte->dirty = 0;
+      pte->referenced = 1;
+      pte->next = page_table_head;
+      page_table_head = pte;
+      memcpy(page, result, size);
+    }
 
     pthread_mutex_unlock(&mutex);
 
     return result;
-}                                                                                                                                                           
-void thread_safe_free(void* ptr) {
-    if (ptr == NULL) {
-        return;
-    }
-
-    pthread_mutex_lock(&mutex);
-
-    struct block* block_ptr = (struct block*)ptr - 1;
-    block_ptr->free = 1;
-
-    pthread_mutex_unlock(&mutex);
-}
-
-
-// Function to allocate a block of memory from the heap
-
-
-
-// // Function to free a block of memory allocated from the heap
+}     
 
 
 void pm_put(void *ptr, void *data, size_t size) {
@@ -114,7 +149,93 @@ void pm_put(void *ptr, void *data, size_t size) {
         return;
     }
     memcpy(block_ptr->data, data, size);
+
+    // // Mark the page as dirty
+    // int pageNum = (uintptr_t)block_ptr / PAGE_SIZE;
+    // dirty[pageNum] = 1;
 }
+
+
+
+// Function to free a block of memory allocated from the heap
+void thread_safe_free(void* ptr) {
+    if (ptr == NULL) {
+        return;
+    }
+
+    pthread_mutex_lock(&mutex);
+
+    struct block* block_ptr = (struct block*)ptr - 1;
+
+    // Check if the block is dirty
+    if (dirty[block_ptr->pageNum]) {
+        // Save the block to disk
+        int fd = open("pagefile.bin", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+        if (fd == -1) {
+            perror("Error opening pagefile.bin");
+            exit(EXIT_FAILURE);
+        }
+        if (lseek(fd, block_ptr->pageNum * PAGE_SIZE, SEEK_SET) == -1) {
+            perror("Error seeking to page position in pagefile.bin");
+            exit(EXIT_FAILURE);
+        }
+        if (write(fd, block_ptr->data, PAGE_SIZE) == -1) {
+            perror("Error writing page to pagefile.bin");
+            exit(EXIT_FAILURE);
+        }
+        close(fd);
+
+        // Clear the dirty flag for the page
+        dirty[block_ptr->pageNum] = 0;
+         // Check if there is enough disk space
+        struct statvfs buf;
+        if (statvfs(".", &buf) == -1) {
+            perror("Error getting filesystem statistics");
+            exit(EXIT_FAILURE);
+        }
+        unsigned long long free_space = buf.f_bsize * buf.f_bfree;
+        if (free_space < PAGE_SIZE) {
+            fprintf(stderr, "Error: Not enough disk space\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+       // Remove the page from the page table
+    int page_num = ((uintptr_t)block_ptr->data - (uintptr_t)phys_mem) / PAGE_SIZE;
+    struct page_table_entry *pte = page_table_head;
+    struct page_table_entry *prev_pte = NULL;
+    while (pte != NULL) {
+      if (pte->virtual_address == block_ptr->data) {
+        if (prev_pte == NULL) {
+          page_table_head = pte->next;
+        } else {
+          prev_pte->next = pte->next;
+        }
+        free(pte);
+        break;
+      }
+      prev_pte = pte;
+      pte = pte->next;
+    }
+  
+  
+    block_ptr->free = 1;
+
+   
+
+    pthread_mutex_unlock(&mutex);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 void pm_get(void *ptr, void *data, size_t size) {
     struct block *block_ptr = (struct block *) ptr - 1;
@@ -122,8 +243,28 @@ void pm_get(void *ptr, void *data, size_t size) {
         fprintf(stderr, "Error: Invalid size for data to retrieve from block\n");
         return;
     }
+
+    if (block_ptr->free) {
+        // Load the page from disk
+        int fd = open("pagefile.bin", O_RDONLY);
+        if (fd == -1) {
+            perror("Error opening pagefile.bin");
+            exit(EXIT_FAILURE);
+        }
+        if (lseek(fd, block_ptr->pageNum * PAGE_SIZE, SEEK_SET) == -1) {
+            perror("Error seeking to page position in pagefile.bin");
+            exit(EXIT_FAILURE);
+        }
+        if (read(fd, block_ptr->data, PAGE_SIZE) == -1) {
+            perror("Error reading page from pagefile.bin");
+            exit(EXIT_FAILURE);
+        }
+        close(fd);
+    }
+
     memcpy(data, block_ptr->data, size);
 }
+
 
 
 
@@ -161,11 +302,23 @@ vmTable_t* createVMtable(int length)
         new_table->pageNumArr[i] = 0;
     }
 
+    
+
     // If there is not enough memory on the heap to make a call to malloc() // Notify and Exit
     if(new_table == NULL || new_table->pageNumArr == NULL || new_table->frameNumArr == NULL) {
         printf("Error - Could not allocate a new Virtual Memory Addressing Table!\r\n");
         exit(-1);
     }
+
+     // Check for errors in memory allocation
+    if (new_table->pageNumArr == NULL || new_table->frameNumArr == NULL || new_table->entryAgeArr == NULL) {
+        thread_safe_free(new_table->pageNumArr);
+        thread_safe_free(new_table->frameNumArr);
+        thread_safe_free(new_table->entryAgeArr);
+        thread_safe_free(new_table);
+        return NULL;
+    }
+  
     return new_table;
 }
 /*
@@ -219,7 +372,7 @@ int* load_page_from_disk(int pageNumber) {
         fprintf(stderr, "Error: Out of memory\n");
         exit(EXIT_FAILURE);
     }
-    FILE* file = fopen("DirtyFile.txt", "rb");
+    FILE* file = fopen("testinput.txt", "rb");
     if (file == NULL) {
         fprintf(stderr, "Error: could not open file %s for reading\n", file);
         exit(EXIT_FAILURE);
@@ -229,6 +382,52 @@ int* load_page_from_disk(int pageNumber) {
     fclose(file);
     return page;
 }
+
+
+void swap_page(int page_num, char* phys_mem) {
+    // unmap the page at the current page number
+    if (munmap(phys_mem + page_num * PAGE_SIZE, PAGE_SIZE) < 0) {
+        perror("munmap failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // map a new page to the current page number
+    int prot = PROT_READ | PROT_WRITE;
+    int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE | MAP_POPULATE;
+    void* new_page = mmap(phys_mem + page_num * PAGE_SIZE, PAGE_SIZE, prot, flags, -1, 0);
+    if (new_page == MAP_FAILED) {
+        perror("mmap failed");
+        exit(EXIT_FAILURE);
+    }
+}
+
+
+void save_dirty_page(int page_number, char* page_data) {
+    if (dirty[page_number]) {
+        // Write the contents of the page to disk
+        int fd = open("page_file", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+        if (fd == -1) {
+            perror("open");
+            exit(EXIT_FAILURE);
+        }
+        off_t offset = page_number * PAGE_SIZE;
+        if (lseek(fd, offset, SEEK_SET) == -1) {
+            perror("lseek");
+            exit(EXIT_FAILURE);
+        }
+        if (write(fd, page_data, PAGE_SIZE) != PAGE_SIZE) {
+            perror("write");
+            exit(EXIT_FAILURE);
+        }
+        if (close(fd) == -1) {
+            perror("close");
+            exit(EXIT_FAILURE);
+        }
+        // Mark the page as clean
+        dirty[page_number] = 0;
+    }
+}
+
 
 /*
     Creating simulated physical memory space
@@ -254,9 +453,17 @@ int** dramAllocate(int frameCount, int blockSize)
           fprintf(stderr, "Error: Out of memory\n");
           exit(EXIT_FAILURE);
         }
-        for(int j = 0; j < blockSize; j++) {
-            temp[i][j] = 0;
-        }
+        // Initialize memory to 0
+        memset(temp[i], 0, blockSize * sizeof(int));
+        // else{
+        //   for(int j = 0; j < blockSize; j++) {
+        //     temp[i][j] = 0;
+        //   }
+          
+        // }
+      
+        
+        
     }
     // If there is not enough memory to make call to malloc() // Notify and exit
     if(temp == NULL) {
