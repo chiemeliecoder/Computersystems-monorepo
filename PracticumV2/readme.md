@@ -68,13 +68,112 @@ is a function for creating a virtual memory table, which is represented as an ar
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 2 Testcases
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+# first test case 
 Error handled  
+
+the code below handled error showing Error: Out of memory
+
+```
+ tlbTable = createVMtable(TLB_SIZE); // The TLB Structure
+    pageTable = createVMtable(PAGE_TABLE_SIZE); // The Page Table
+    dram = dramAllocate(TOTAL_FRAME_COUNT, FRAME_SIZE); // Physical Memory
+    int translationCount = 0;
+    char* algoName;
+
+    // perform basic error checking
+    if (argc != 2) {
+        fprintf(stderr,"Usage: ./main [input file]\n");
+        return -1;
+    }
+
+    // open the file containing the backing store
+    backing_store = fopen("BACKING_STORE.bin", "rb");
+
+    if (backing_store == NULL) {
+        fprintf(stderr, "Error opening BACKING_STORE.bin %s\n","BACKING_STORE.bin");
+        return -1;
+    }
+
+    // open the file containing the logical addresses
+    address_file = fopen(argv[1], "r");
+
+    if (address_file == NULL) {
+        fprintf(stderr, "Error opening %s. Expecting [InputFile].txt or equivalent.\n",argv[1]);
+        return -1;
+    }
+
+
+    printf("\nWelcome to Don's VM Simulator Version 1.0");
+    printf("\nNumber of logical pages: %d\nPage size: %d bytes\nPage Table Size: %d\nTLB Size: %d entries\nNumber of Physical Frames: %d\nPhysical Memory Size: %d bytes", PAGE_TABLE_SIZE, PAGE_READ_SIZE, PAGE_TABLE_SIZE, TLB_SIZE, FRAME_SIZE, PAGE_READ_SIZE * FRAME_SIZE);
+
+
+    do {
+        printf("\nDisplay All Physical Addresses? [y/n]: ");
+        scanf("\n%c", &display_choice);
+    } while (display_choice != 'n' && display_choice != 'y');
+
+    do {
+        printf("Choose TLB Replacement Strategy [1: FIFO, 2: LRU]: ");
+        scanf("\n%c", &algo_choice);
+    } while (algo_choice != '1' && algo_choice != '2');
+
+
+
+    // Read through the input file and output each virtual address
+    while (fgets(addressReadBuffer, MAX_ADDR_LEN, address_file) != NULL) {
+        virtual_addr = atoi(addressReadBuffer); // converting from ascii to int
+
+        // 32-bit masking function to extract page number
+        page_number = getPageNumber(PAGE_MASK, virtual_addr, SHIFT);
+
+        // 32-bit masking function to extract page offset
+        offset_number = getOffset(OFFSET_MASK, virtual_addr);
+
+        // Get the physical address and translatedValue stored at that address
+        translateAddress(algo_choice);
+        translationCount++;  // increment the number of translated addresses
+    }
+
+    // Determining stdout algo name for Menu
+    if (algo_choice == '1') {
+        algoName = "FIFO";
+    }
+    else {
+        algoName = "LRU";
+    }
+
+    printf("\n-----------------------------------------------------------------------------------\n");
+    // calculate and print out the stats
+    printf("\nResults Using %s Algorithm: \n", algoName);
+    printf("Number of translated addresses = %d\n", translationCount);
+    double pfRate = (double)pageTable->pageFaultCount / (double)translationCount;
+    double TLBRate = (double)tlbTable->tlbHitCount / (double)translationCount;
+
+    printf("Page Faults = %d\n", pageTable->pageFaultCount);
+    printf("Page Fault Rate = %.3f %%\n",pfRate * 100);
+    printf("TLB Hits = %d\n", tlbTable->tlbHitCount);
+    printf("TLB Hit Rate = %.3f %%\n", TLBRate * 100);
+    printf("Average time spent retrieving data from backing store: %.3f millisec\n", getAvgTimeInBackingStore());
+    printf("\n-----------------------------------------------------------------------------------\n");
+
+    // close the input file and backing store
+    fclose(address_file);
+    fclose(backing_store);
+
+    // NOTE: REMEMBER TO FREE DYNAMICALLY ALLOCATED MEMORY
+    freeVMtable(&tlbTable);
+    freeVMtable(&pageTable);
+    freeDRAM(&dram, TOTAL_FRAME_COUNT);
+    ```
 
 The allocation of memory has failed in the dramAllocate function, then the function will exit with an error message. The code you provided already has the proper error handling for this case, which is to print an error message and exit the program with a failure status. 
 
 If you want to handle this error in a different way, you could modify the error message or change the exit status. For example, you could change the exit status to a non-negative integer to indicate a specific error code. Or you could print a different error message to provide more information about the failure. 
 
 However, it's important to note that in most cases, the proper handling for a failed memory allocation is to exit the program with a failure status. This is because the program cannot continue to run without the required memory, and any further execution could result in undefined behavior or crashes. 
+
+# The second test case thread_function
+
+# The thrid test case thread_func2
 
 
