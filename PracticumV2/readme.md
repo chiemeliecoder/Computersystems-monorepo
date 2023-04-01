@@ -72,6 +72,11 @@ is a function for creating a virtual memory table, which is represented as an ar
 Error handled  
 
 the code below handled error showing Error: Out of memory
+The allocation of memory has failed in the dramAllocate function, then the function will exit with an error message. The code you provided already has the proper error handling for this case, which is to print an error message and exit the program with a failure status. 
+
+If you want to handle this error in a different way, you could modify the error message or change the exit status. For example, you could change the exit status to a non-negative integer to indicate a specific error code. Or you could print a different error message to provide more information about the failure. 
+
+However, it's important to note that in most cases, the proper handling for a failed memory allocation is to exit the program with a failure status. This is because the program cannot continue to run without the required memory, and any further execution could result in undefined behavior or crashes. 
 
 ```
  tlbTable = createVMtable(TLB_SIZE); // The TLB Structure
@@ -166,14 +171,8 @@ the code below handled error showing Error: Out of memory
     freeDRAM(&dram, TOTAL_FRAME_COUNT);
 ```c
 
-The allocation of memory has failed in the dramAllocate function, then the function will exit with an error message. The code you provided already has the proper error handling for this case, which is to print an error message and exit the program with a failure status. 
 
-If you want to handle this error in a different way, you could modify the error message or change the exit status. For example, you could change the exit status to a non-negative integer to indicate a specific error code. Or you could print a different error message to provide more information about the failure. 
 
-However, it's important to note that in most cases, the proper handling for a failed memory allocation is to exit the program with a failure status. This is because the program cannot continue to run without the required memory, and any further execution could result in undefined behavior or crashes. 
 
-# The second test case thread_function
-
-# The thrid test case thread_func2
 
 
