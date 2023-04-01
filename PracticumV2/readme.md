@@ -79,7 +79,7 @@ If you want to handle this error in a different way, you could modify the error 
 However, it's important to note that in most cases, the proper handling for a failed memory allocation is to exit the program with a failure status. This is because the program cannot continue to run without the required memory, and any further execution could result in undefined behavior or crashes. 
 
 ```
- tlbTable = createVMtable(TLB_SIZE); // The TLB Structure
+    tlbTable = createVMtable(TLB_SIZE); // The TLB Structure
     pageTable = createVMtable(PAGE_TABLE_SIZE); // The Page Table
     dram = dramAllocate(TOTAL_FRAME_COUNT, FRAME_SIZE); // Physical Memory
     int translationCount = 0;
