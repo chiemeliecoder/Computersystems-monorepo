@@ -224,7 +224,7 @@ int GetCommandFromRequest(char* request)
 		return 3;
 	else if(!strcmp(cmd, "RM"))
 		return 4;
-	else if(!strcmp(cmd, "SHOW"))
+	else if(!strcmp(cmd, "INFO"))
 		return 5;
 	else if(!strcmp(cmd, "EXIT"))
 		return 6;
@@ -369,7 +369,7 @@ GET - receives a file from the server
 PUT - sends a file to the server
 MD - gets the metadata of a file
 RM - creates a new folder
-SHOW - deletes a file or folder
+INFO - deletes a file or folder
 EXIT - terminates the connection.
 
 */
