@@ -13,6 +13,8 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <time.h>
+#include <stdbool.h>
+#include <sys/sendfile.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -240,6 +242,34 @@ int GetCommandFromRequest(char* request)
 }
 
 /*
+This function sends a file over a socket connection. It first uses the stat() function to get information about the file, including its size, and then opens the file using open() function with read-only mode. It then sends the file size to the socket using the write() function, followed by the contents of the file using sendfile() function, which is an efficient way to transfer large files over sockets.
+
+At the end of the function, it prints a message indicating that the file has been sent and returns a boolean value true to indicate that the file transfer was successful.
+*/
+
+bool SendFileOverSocket(int socket_desc, char* file_name)
+{
+	struct stat	obj;
+	int file_desc, file_size;
+
+	printf("Sending File...\n");
+	stat(file_name, &obj);
+
+	// Open file
+	file_desc = open(file_name, O_RDONLY);
+	// Send file size
+	file_size = obj.st_size;
+	write(socket_desc, &file_size, sizeof(int));
+	// Send File
+	sendfile(socket_desc, file_desc, NULL, file_size);
+
+	printf("File %s sent\n",file_name);
+	return true;
+}
+
+
+
+/*
 This function is implementing the "GET" operation for a client-server file transfer system. The function takes in the name of the file to be retrieved and a socket descriptor. It checks if the file exists on the server and if it does, it sends an "OK" message to the client followed by the file data. If the file is not present, it sends a "NO" message to the client.
 
 The code checks if the file exists on the server by using the access function with the F_OK flag, which checks for the existence of the file. If the file is present, the function sends an "OK" message to the client using the write function, indicating that the server has the requested file. It then calls two other functions SendFileOverSocket and write_file, which send the contents of the file over the socket to the client.
@@ -261,8 +291,14 @@ void performGET(char *file_name, int socket)
 		write(socket, server_response, strlen(server_response));
 		
 		//Send File
-		SendFileOverSocket(socket, file_name);
+		if (SendFileOverSocket(socket, file_name) < 0) {
+      fprintf(stderr, "Error sending file.\n");
+      return;
+    }
+    
     write_file(socket);
+    
+    printf("File %s sent successfully.\n", file_name);
 	}
 	else
 	{
@@ -274,6 +310,9 @@ void performGET(char *file_name, int socket)
 		write(socket, server_response, strlen(server_response)); 
 	}
 }
+
+
+
 
 
 
@@ -522,7 +561,7 @@ void periodically_check_for_usb_devices2(usb_device_t *devices) {
 
 
 /*
-This code creates a socket and listens for incoming connections on a specified IP address and port number. It creates a socket, binds it to the IP address and port number, and listens for incoming connections. When a connection is accepted, it creates a new thread or process to handle the connection. If a thread is created, it calls the ConnectionHandler function, and if a process is created, it writes data to file1.txt and periodically checks for a second USB drive, calls the performINFO function and then calls the ConnectionHandler function.The code takes two command-line arguments: the port number and the IP address to bind to. If the command-line arguments are not provided, the program exits. Finally, it closes the socket and returns 0.
+This function creates a socket and listens for incoming connections on a specified IP address and port number. It creates a socket, binds it to the IP address and port number, and listens for incoming connections. When a connection is accepted, it creates a new thread or process to handle the connection. If a thread is created, it calls the ConnectionHandler function, and if a process is created, it writes data to file1.txt and periodically checks for a second USB drive, calls the performINFO function and then calls the ConnectionHandler function.The code takes two command-line arguments: the port number and the IP address to bind to. If the command-line arguments are not provided, the program exits. Finally, it closes the socket and returns 0.
 */
 
 
