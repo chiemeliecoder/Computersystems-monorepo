@@ -24,11 +24,20 @@
 char *usb_path; // global variable to store USB drive path
 
 
+// I used BUFSIZ instead of the BUFFSIZE I defined because It is generally better to use the predefined constant BUFSIZ instead of defining your own buffer size constant BUFFSIZE. This ensures that the buffer size is set to a reasonable value that is suitable for the system on which the program is running. 
+
+
 void send_file(const char *file_path, int socket_desc);
 void performGET(char *file_name,int socket_desc);
 void performPUT(char *file_name,int socket_desc);
 char *identify_usb_drive();
 
+
+
+
+/*
+The function is sending a file over a socket connection and writing it to a destination file in a USB drive. It reads the file in chunks, sends each chunk over the socket, and writes it to the destination file. The code also checks for errors during the process and exits the program if any errors occur.
+*/
 
 
 
@@ -65,7 +74,7 @@ void send_file(const char *file_path, int socket_desc){
   }
 
   // Copy data from the source file to the destination file
-  while(fgets(data, BUFFSIZE, fp) != NULL) {
+  while(fgets(data, BUFSIZ, fp) != NULL) {
     // Send the message to server:
     if (send(socket_desc, data, sizeof(data), 0) == -1) {
       perror("Error in sending file.");
@@ -76,7 +85,7 @@ void send_file(const char *file_path, int socket_desc){
     }
     // Write the data to the destination file in the USB drive
     fwrite(data, sizeof(char), strlen(data), destination_file);
-    bzero(data, BUFFSIZE);
+    bzero(data, BUFSIZ);
   }
 
   // Close both files
@@ -87,6 +96,9 @@ void send_file(const char *file_path, int socket_desc){
   
 
 
+/**
+This function is_usb_drive takes a file path as an argument and checks whether the specified device is a USB drive or not. It does this by first opening the file, checking if it is a block device and then opening the USB bus to check if the device has a USB interface. Finally, it returns a boolean value indicating whether the device is a USB drive or not.It returns 1 if the specified device path is a block device with a USB interface, and 0 otherwise.
+*/
 
 
 int is_usb_drive(const char* path) {
@@ -131,6 +143,11 @@ int is_usb_drive(const char* path) {
 
 
 
+/**
+The identify_usb_drive() function identifies the path to a USB drive by scanning the "/media" directory and checking if each directory in it corresponds to a USB drive using the is_usb_drive() function. If a USB drive is found, it returns the path to the drive, otherwise, it returns NULL.
+*/
+
+
 
 char* identify_usb_drive() {
   struct dirent **namelist;
@@ -159,6 +176,12 @@ char* identify_usb_drive() {
   return usb_path;
 }
 
+
+
+
+/*
+The function below defines a function performGET that performs a GET request to a server to retrieve a file with a given file name. It first checks if the file already exists locally and prompts the user to overwrite it or abort the operation. If the file is not present locally or the user decides to overwrite it, the function sends a GET request to the server with the given file name. If the file exists at the server, the function receives the file size and data and writes the data to a local file with the same name as the requested file. If the file does not exist at the server, the function prints an error message.
+*/
 
 
 
@@ -206,7 +229,9 @@ void performGET(char *file_name,int socket_desc){
 
 
 
-
+/*
+The function is implementing a "PUT" operation in a client-server file transfer protocol. The client sends a PUT request to the server with the file name, and if the server does not have the file, the client sends the file to the server. If the file already exists on the server, the client prompts the user whether to overwrite or not. If the user chooses to overwrite, the client sends the file to the server. If the user chooses not to overwrite or if the server cannot create the file, the transfer is aborted.
+*/
 
 
 
@@ -228,7 +253,7 @@ void performPUT(char *file_name,int socket_desc)
 		if (strcmp(reply_msg, "OK") == 0)
 		{
 			// Everything if fine and send file
-			SendFileOverSocket(socket_desc, file_name);
+			send_file(file_name, socket_desc);
 		}
 		else if(strcmp(reply_msg, "FP") == 0)
 		{
@@ -241,7 +266,7 @@ void performPUT(char *file_name,int socket_desc)
 				printf("Overwriting %s\n",file_name );
 				strcpy(client_response, "Y");
 				write(socket_desc, client_response, strlen(client_response));
-				SendFileOverSocket(socket_desc, file_name);
+				send_file(file_name, socket_desc);
 			}
 			else
 			{
@@ -267,7 +292,9 @@ void performPUT(char *file_name,int socket_desc)
 
 
 
-
+/*
+The function is implementing a client-side application that can communicate with a server. It establishes a connection with the server, sends a file to the server using the send_file() function, and then waits for user input to perform various actions on the server-side files such as GET, PUT, MD, RM, and EXIT. For example, when the user chooses to create a directory, the mkdir() function is used to create the directory on the server-side, and when the user chooses to delete a file or a directory, the remove() function is used to remove it from the server-side. The connection is closed at the end of the program.
+*/
 
 
 
@@ -332,13 +359,13 @@ int main(int argc , char *argv[])
 		{
 			case 1:
 				printf("Enter file_name to get: ");
-				scanf("%s", file_name);
-				performGET(file_name,socket_desc);
+				scanf("%s", filename);
+				performGET(filename,socket_desc);
 				break;
 			case 2:
 				printf("Enter file_name to put: ");
-				scanf("%s", file_name);
-				performPUT(file_name,socket_desc);
+				scanf("%s", filename);
+				performPUT(filename,socket_desc);
 				break;
       case 3:
         printf("Enter folder_name to create: ");
@@ -352,8 +379,8 @@ int main(int argc , char *argv[])
         break;
       case 4:
         printf("Enter file/folder name to delete: ");
-        scanf("%s", file_name);
-        int status = remove(file_name);
+        scanf("%s", filename);
+        int status = remove(filename);
         if (status == 0) {
           printf("File/folder deleted successfully.\n");
         } else {
