@@ -231,7 +231,13 @@ int GetCommandFromRequest(char* request)
 	return 0;
 }
 
+/*
+This function is implementing the "GET" operation for a client-server file transfer system. The function takes in the name of the file to be retrieved and a socket descriptor. It checks if the file exists on the server and if it does, it sends an "OK" message to the client followed by the file data. If the file is not present, it sends a "NO" message to the client.
 
+The code checks if the file exists on the server by using the access function with the F_OK flag, which checks for the existence of the file. If the file is present, the function sends an "OK" message to the client using the write function, indicating that the server has the requested file. It then calls two other functions SendFileOverSocket and write_file, which send the contents of the file over the socket to the client.
+
+If the file is not present, the function sends a "NO" message to the client indicating that the file could not be found on the server.
+*/
 
 void performGET(char *file_name, int socket)
 {
