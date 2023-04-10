@@ -23,4 +23,6 @@ Instructions
 ```c
 $ gcc server.c -o server -lpthread
 $ ./server <PORT NUMBER> <ADDRESS NUMBER> please use port number 9765 and address number 127.0.0.1
+$ gcc client.c -o client
+$ /client file1.txt PUT you can use any of the server operation above for the second argument(PUT, GET, MD, EXIT)
 ```
