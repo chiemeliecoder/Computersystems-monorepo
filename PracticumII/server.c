@@ -406,11 +406,7 @@ void *ConnectionHandler(void *socket_desc)
 				performPUT(file_name, socket);
 				break;
 			case 3:
-				strcpy(file_ext, GetArgumentFromRequest(client_request));
-				performINFO(file_name);
-				break;
-			case 4:
-				strcpy(file_name, GetArgumentFromRequest(client_request));
+        strcpy(file_name, GetArgumentFromRequest(client_request));
         int status = mkdir(file_name, 0700); // create folder
         if (status != 0) {
           strcpy(reply, "Failed to create folder.\n");
@@ -419,7 +415,7 @@ void *ConnectionHandler(void *socket_desc)
         }
         send(socket, reply, strlen(reply), 0);
 				break;
-			case 5:
+			case 4:
 				// Delete file/folder
         strcpy(file_name, GetArgumentFromRequest(client_request));
         int status = remove(file_name);
@@ -429,6 +425,10 @@ void *ConnectionHandler(void *socket_desc)
           strcpy(reply, "File/folder deleted successfully.\n");
         }
         send(socket, reply, strlen(reply), 0);
+				break;
+			case 5:
+				strcpy(file_ext, GetArgumentFromRequest(client_request));
+				performINFO(file_name);
 				break;
 			case 6:
 				free(socket_desc);   
