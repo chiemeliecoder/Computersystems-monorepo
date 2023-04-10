@@ -293,6 +293,21 @@ void performPUT(char *file_name,int socket_desc)
 
 
 /*
+This function called performINFO that sends a request to the server to retrieve file information for a specified file (filepath). The function first formats the request message using sprintf with the string "INFO" followed by the file path. It then writes the request message to the socket using write, which sends the message to the server. The function then initializes an empty response message buffer, response_msg, using memset and then reads the server's response using read. Finally, the function prints the response message to the console using printf. The server is expected to parse the request message, retrieve the file information, format it into a response message, and send it back to the client via the socket.
+*/
+
+void performINFO(int socket_desc, const char* filepath) {
+  char request_msg[2000], response_msg[2000];
+  sprintf(request_msg, "INFO %s", filepath);
+  write(socket_desc, request_msg, strlen(request_msg));
+  memset(response_msg, 0, sizeof(response_msg));
+  read(socket_desc, response_msg, sizeof(response_msg));
+  printf("%s\n", response_msg);
+}
+
+
+
+/*
 The function is implementing a client-side application that can communicate with a server. It establishes a connection with the server, sends a file to the server using the send_file() function, and then waits for user input to perform various actions on the server-side files such as GET, PUT, MD, RM, and EXIT. For example, when the user chooses to create a directory, the mkdir() function is used to create the directory on the server-side, and when the user chooses to delete a file or a directory, the remove() function is used to remove it from the server-side. The connection is closed at the end of the program.
 */
 
@@ -353,7 +368,7 @@ int main(int argc , char *argv[])
   char folder_name[50]; // define folder_name variable
 	while(1)
 	{
-		printf("Enter a choice:\n1- GET\n2- PUT\n3- MD\n4- RM\n5- EXIT\n");
+		printf("Enter a choice:\n1- GET\n2- PUT\n3- MD\n4- RM\n5- INFO\n6- EXIT\n");
 		scanf("%d", &choice);
 		switch(choice)
 		{
@@ -387,7 +402,12 @@ int main(int argc , char *argv[])
           printf("Failed to delete file/folder.\n");
         }
         break;
-			case 5:
+      case 5:
+        printf("Enter file_name to get info: ");
+        scanf("%s", filename);
+        performINFO(socket_desc, filename);
+        break;
+			case 6:
 				strcpy(request_msg,"EXIT");
 				write(socket_desc, request_msg, strlen(request_msg));	
 				return 0;
