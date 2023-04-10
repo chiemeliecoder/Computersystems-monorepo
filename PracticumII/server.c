@@ -19,6 +19,14 @@
 #include <unistd.h>
 
 #define BUFFSIZE 1024
+#define NUM_USB_DEVICES 2
+#define BUF_SIZE 4096
+
+// struct to hold information about a USB device
+typedef struct {
+  char *path;
+  FILE *fp;
+} usb_device_t;
 
 
 // I used BUFSIZ instead of the BUFFSIZE I defined because It is generally better to use the predefined constant BUFSIZ instead of defining your own buffer size constant BUFFSIZE. This ensures that the buffer size is set to a reasonable value that is suitable for the system on which the program is running. 
@@ -440,6 +448,79 @@ void *ConnectionHandler(void *socket_desc)
 }
 
 
+
+// function to read data from a USB device
+/*
+The function reads data from a USB device, processes it, and outputs the data in a specific format (using printf in this case). It uses the fread function to read data from the device's file pointer, and loops until the end of the file is reached or an error occurs. If data is successfully read, it is processed in the else statement, which in this case prints each byte read in hexadecimal format using printf.
+*/
+void* read_from_usb_device(void *arg) {
+  usb_device_t *dev = (usb_device_t *)arg;
+  char buffer[BUFSIZ];
+  while (1) {
+    ssize_t bytes_read = fread(buffer, 1, BUFSIZ, dev->fp);
+    if (bytes_read < 0) {
+      printf("Error reading from file %s\n", dev->path);
+      exit(1);
+    } else if (bytes_read == 0) {
+      // Reached end of file
+      break;
+    } else {
+      // Process data read from the file
+      for (int i = 0; i < bytes_read; i++) {
+        printf("Byte read: %02X\n", buffer[i]);
+      }
+    }
+  }
+  return NULL;
+}
+
+
+
+// function to periodically check for USB devices and open file pointers for available devices
+/*
+The function periodically_check_for_usb_devices2 is a program that periodically checks for the availability of USB devices by trying to open their file pointers. Once a device is available, it opens a file pointer for that device, creates a thread to read data from the device, and waits for all threads to finish. Afterward, it closes all file pointers. The program runs in a loop, checking for USB devices every 5 seconds until it finds all the specified number of devices.
+*/
+void periodically_check_for_usb_devices2(usb_device_t *devices) {
+  int seconds_to_wait = 5;
+  int num_devices = 0;
+
+  while (num_devices < NUM_USB_DEVICES) {
+    // check for available USB devices
+    for (int i = 0; i < NUM_USB_DEVICES; i++) {
+      if (devices[i].fp == NULL && access(devices[i].path, F_OK) != -1) {
+        // open file pointer for available device
+        devices[i].fp = fopen(devices[i].path, "r");
+        if (devices[i].fp == NULL) {
+          printf("Failed to open %s\n", devices[i].path);
+          exit(1);
+        }
+        printf("Found USB device %d at %s\n", i+1, devices[i].path);
+        num_devices++;
+      }
+    }
+    sleep(10);
+  }
+
+  // create threads to read from each USB device in parallel
+  pthread_t threads[NUM_USB_DEVICES];
+  for (int i = 0; i < NUM_USB_DEVICES; i++) {
+    pthread_create(&threads[i], NULL, read_from_usb_device, &devices[i]);
+  }
+
+  // wait for all threads to finish
+  for (int i = 0; i < NUM_USB_DEVICES; i++) {
+    pthread_join(threads[i], NULL);
+  }
+
+  // close all file pointers
+  for (int i = 0; i < NUM_USB_DEVICES; i++) {
+    fclose(devices[i].fp);
+  }
+}
+
+
+
+
 /*
 This code creates a socket and listens for incoming connections on a specified IP address and port number. It creates a socket, binds it to the IP address and port number, and listens for incoming connections. When a connection is accepted, it creates a new thread or process to handle the connection. If a thread is created, it calls the ConnectionHandler function, and if a process is created, it writes data to file1.txt and periodically checks for a second USB drive, calls the performINFO function and then calls the ConnectionHandler function.The code takes two command-line arguments: the port number and the IP address to bind to. If the command-line arguments are not provided, the program exits. Finally, it closes the socket and returns 0.
 */
@@ -453,8 +534,14 @@ int main(int argc , char *argv[])
   struct sockaddr_in server_addr, client_addr;
   char server_message[8196], client_message[8196];
   FILE *fp1 = fopen("file1.txt", "r");
-  FILE *fp2 = fopen("file2.txt", "r");
+  FILE *fp2 = fopen("file2.txt", "r")
   char buffer[BUFSIZ];
+
+  usb_device_t devices[NUM_USB_DEVICES];
+  devices[0].path = "/dev/sda1";
+  devices[0].fp = NULL;
+  devices[1].path = "/dev/sdb1";
+  devices[1].fp = NULL;
 
 
   if(argc!=3){
@@ -537,6 +624,7 @@ int main(int argc , char *argv[])
       printf("Data written in the file successfully.\n");
       performINFO("folder/path/file.txt");
       ConnectionHandler((void*)&client_sock);
+      periodically_check_for_usb_devices2(devices);
       close(client_sock);
       return 0;
     }
