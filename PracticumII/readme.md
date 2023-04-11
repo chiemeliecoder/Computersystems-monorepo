@@ -27,5 +27,6 @@ $ gcc client.c -o client
 $ ./fgets file1.txt PUT you can use any of the server operation above for the second argument(PUT, GET, MD, RM, INFO, EXIT)
 for the piping we would use
 $ ./server | tee file1.txt (he tee command is a Unix and Linux command-line utility used to read standard input and write it to both standard output and one or more files simultaneously.)
+./server | ls -l (another program that can be used in this command line. It will list the files in the current directory along with additional information such as file permissions, owner, group, size, and modification time.)
 
 ```
