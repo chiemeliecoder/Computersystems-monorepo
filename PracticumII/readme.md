@@ -22,8 +22,10 @@ Instructions
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ```c
 $ gcc server.c -o server -lpthread
-$ ./server <PORT NUMBER> <ADDRESS NUMBER> please use port number 9765 and address number 127.0.0.1
-$ gcc client.c -o client
+$ ./server <PORT NUMBER> please use port number 9765
+$ gcc fgets.c -o fgets
+for GET client commandline
+$ fget GET folder/foo.txt data/localfoo.txt
 $ ./fgets file1.txt PUT you can use any of the server operation above for the second argument(PUT, GET, MD, RM, INFO, EXIT)
 for the piping we would use
 $ ./server | tee file1.txt (he tee command is a Unix and Linux command-line utility used to read standard input and write it to both standard output and one or more files simultaneously.)
