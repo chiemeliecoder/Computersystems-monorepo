@@ -6,591 +6,149 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/sendfile.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <time.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <pthread.h>
 #include <dirent.h>
-#include <fcntl.h>
-#include <time.h>
-#include <stdbool.h>
-#include <sys/sendfile.h>
-#include <sys/stat.h>
+#include <errno.h>
+#include <string.h>
+#include "server.h"
+
+
+#include <stdio.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#define BUFFSIZE 1024
-#define NUM_USB_DEVICES 2
-#define BUF_SIZE 4096
 
-// struct to hold information about a USB device
-typedef struct {
-  char *path;
-  FILE *fp;
-} usb_device_t;
-
-
-// I used BUFSIZ instead of the BUFFSIZE I defined because It is generally better to use the predefined constant BUFSIZ instead of defining your own buffer size constant BUFFSIZE. This ensures that the buffer size is set to a reasonable value that is suitable for the system on which the program is running. 
-
-
-/**
-This function reads data from a socket connection and writes it to two separate files named file2-1.txt and file2-2.txt. The function receives data in chunks of size BUFSIZ and writes them to the files using the fprintf() function. The function continues to read data until there is no more data to read or an error occurs. Once all the data has been written to the files, the function closes the files and returns.
-*/
-
-void write_file(int socket_desc){
-  int n;
-  FILE *fp1 *fp2;
-  char *filename1 = "file2-1.txt";
-  char *filename2 = "file2-2.txt";
-  char buffer[BUFSIZ];
-
-  fp1 = fopen(filename1, "w");
-  fp2 = fopen(filename2, "w");
+void perform_info_command(int client_sock, const char* remote_file_path) {
+  char response[BUFFER_SIZE];
+  struct stat file_info;
   
-  while (1) {
-    // Receive client's message:
-    n = recv(socket_desc, buffer, BUFSIZ, 0);
-    if (n <= 0){
-      break;
-      return;
-    }
-    // Write to first USB drive
-    fprintf(fp1, "%s", buffer);
-    
-    // Write to second USB drive
-    fprintf(fp2, "%s", buffer);
-    
-    bzero(buffer, BUFSIZ);
-  }
-  fclose(fp1);
-  fclose(fp2);
-  
-  return;
-}
-
-
-/**
-This function is_usb_drive takes a file path as an argument and checks whether the specified device is a USB drive or not. It does this by first opening the file, checking if it is a block device and then opening the USB bus to check if the device has a USB interface. Finally, it returns a boolean value indicating whether the device is a USB drive or not.It returns 1 if the specified device path is a block device with a USB interface, and 0 otherwise.
-*/
-
-int is_usb_drive(const char* path) {
-  int fd = open(path, O_RDONLY);
-  if (fd < 0) {
-    perror("Error opening device");
-    return 0;
-  }
-
-  struct stat statbuf;
-  if (fstat(fd, &statbuf) < 0) {
-    perror("Error getting device stats");
-    close(fd);
-    return 0;
-  }
-
-  if (!S_ISBLK(statbuf.st_mode)) {
-    // Not a block device
-    close(fd);
-    return 0;
-  }
-
-  // Check if device has a USB interface
-  int has_usb_interface = 0;
-  int usb_fd = open("/dev/bus/usb", O_RDONLY);
-  if (usb_fd < 0) {
-    perror("Error opening USB bus");
-  } else {
-    struct usbdevfs_getdriver driver;
-    driver.interface = -1;
-    ioctl(fd, USBDEVFS_GETDRIVER, &driver);
-    if (driver.interface >= 0) {
-      has_usb_interface = 1;
-    }
-    close(usb_fd);
-  }
-
-  close(fd);
-
-  return has_usb_interface;
-}
-
-
-
-/**
-The identify_usb_drive2() function identifies the path to a USB drive by scanning the "/media" directory and checking if each directory in it corresponds to a USB drive using the is_usb_drive() function. If a USB drive is found, it returns the path to the drive, otherwise, it returns NULL.
-*/
-
-char* identify_usb_drive2() {
-  struct dirent **namelist;
-  int num_drives = scandir("/media", &namelist, 0, alphasort);
-  if (num_drives == -1) {
-    perror("Error in scanning directory");
-    return NULL;
-  }
-
-  char *usb_path = NULL;
-  for (int i = 0; i < num_drives; i++) {
-    if (strcmp(namelist[i]->d_name, ".") != 0 && strcmp(namelist[i]->d_name, "..") != 0) {
-      char *full_path = malloc(strlen("/media/") + strlen(namelist[i]->d_name) + 1);
-      sprintf(full_path, "/media/%s", namelist[i]->d_name);
-      if (is_usb_drive(full_path)) {
-        usb_path = full_path;
-        break;
-      } else {
-        free(full_path);
-      }
-    }
-    free(namelist[i]);
-  }
-  free(namelist);
-
-  return usb_path;
-}
-
-
-
-
-
-/*
-The write_to_usb_drive function takes a string of data and the path to a USB drive as input. It opens the USB drive in append mode, writes the data to it using the fprintf function, and then closes the file. If an error occurs while opening the USB drive, it prints an error message and returns without writing anything to the drive.
-*/
-
-
-void write_to_usb_drive(const char* data, const char* path) {
-  FILE* fp = fopen(path, "a"); // open the USB drive in append mode
-  if (fp == NULL) {
-    perror("Error opening USB drive");
+  // Get file information using stat():
+  if (stat(remote_file_path, &file_info) == -1) {
+    snprintf(response, BUFFER_SIZE, "Error getting file information: %s", strerror(errno));
+    send(client_sock, response, strlen(response), 0);
     return;
   }
-  fprintf(fp, "%s", data); // write the data to the USB drive
-  fclose(fp); // close the file
-}
-
-
-
-/*
-The function periodically checks for the presence of a second USB drive every 5 seconds. If a second USB drive is detected, it checks for any pending files to be written to it. If there are any pending files, it reads the file line by line and writes them to the second USB drive. After writing all pending files, it closes the file and sets the file pointer to NULL. If the second USB drive is not detected, it prints a message and waits for 5 seconds before checking again.
-*/
-
-
-void periodically_check_for_second_usb_drive(FILE *fp1, FILE *fp2, char *buffer) {
-  char *usb_path2 = NULL;
-  int seconds_to_wait = 5; // specify the interval to check for the second USB drive in seconds
   
-  while(1) {
-    usb_path2 = identify_usb_drive2(); // identify the second USB drive
-    
-    if (usb_path2 != NULL) {
-      printf("Second USB drive detected at %s\n", usb_path2);
-      // check if there are any pending files to be written to the second USB drive
-      if (fp2 != NULL) {
-        fseek(fp2, 0, SEEK_SET); // move the file pointer to the beginning of the file
-        
-        // read the file line by line and write to the second USB drive
-        while (fgets(buffer, BUFSIZ, fp2)) {
-          write_to_usb_drive(buffer, usb_path2);
-        }
-        
-        fclose(fp2); // close the file after writing to the second USB drive
-        fp2 = NULL; // set the file pointer to NULL since there are no pending files left
-      }
-    }
-    else {
-      printf("Second USB drive not detected. Waiting for %d seconds before checking again.\n", seconds_to_wait);
-    }
-    
-    sleep(seconds_to_wait); // wait for the specified interval before checking for the second USB drive again
+  // Format the response with the file information:
+  snprintf(response, BUFFER_SIZE,
+           "File name: %s\n"
+           "Size: %ld bytes\n"
+           "Owner: %d\n"
+           "Group: %d\n"
+           "Permissions: %o\n"
+           "Last modified: %s",
+           remote_file_path,
+           file_info.st_size,
+           file_info.st_uid,
+           file_info.st_gid,
+           file_info.st_mode & 0777,
+           ctime(&file_info.st_mtime));
+  
+  // Send the response back to the client:
+  send(client_sock, response, strlen(response), 0);
+}
+
+
+
+
+// function to handle the PUT command
+void perform_put_command(int client_sock, char* remote_file_path, char* local_file_path) {
+  FILE* local_file;
+  FILE* remote_file;
+  char buffer[BUFFER_SIZE];
+  size_t bytes_read;
+  int total_bytes_received = 0;
+  int expected_file_size;
+
+  // Open the local file
+  if (local_file_path == NULL) {
+    printf("Local file path not provided, using remote file path as local file path\n");
+    local_file_path = remote_file_path;
   }
-}
-
-
-
-/*
-This function defines a function GetCommandFromRequest that takes a character array request as input and returns an integer corresponding to the command type specified in the request. The function first creates a new character array cmd and copies the input request into it. It then searches for the first space character in the request string and extracts the command type by copying the characters from the start of the request string up to the first space character into the cmd array. The function then uses strcmp to compare the cmd array to a list of predefined command strings and returns the appropriate integer value for the corresponding command. If no valid command is found, the function returns 0.
-*/
-
-
-
-int GetCommandFromRequest(char* request)
-{
-	char cmd[CMD_SIZE];
-	strcpy(cmd, request);
-	int i = 0;
-	while(request[i] != ' ' && request[i] != '\0')
-		i++;
-	if(request[i] == '\0')
-		return 6;
-	else
-	{
-		strncpy(cmd, request, i-1);
-		cmd[i] = '\0';
-	}
-		
-	if(!strcmp(cmd, "GET"))
-		return 1;
-	else if(!strcmp(cmd, "PUT"))
-		return 2;
-	else if(!strcmp(cmd, "MD"))
-		return 3;
-	else if(!strcmp(cmd, "RM"))
-		return 4;
-	else if(!strcmp(cmd, "INFO"))
-		return 5;
-	else if(!strcmp(cmd, "EXIT"))
-		return 6;
-	return 0;
-}
-
-/*
-This function sends a file over a socket connection. It first uses the stat() function to get information about the file, including its size, and then opens the file using open() function with read-only mode. It then sends the file size to the socket using the write() function, followed by the contents of the file using sendfile() function, which is an efficient way to transfer large files over sockets.
-
-At the end of the function, it prints a message indicating that the file has been sent and returns a boolean value true to indicate that the file transfer was successful.
-*/
-
-bool SendFileOverSocket(int socket_desc, char* file_name)
-{
-	struct stat	obj;
-	int file_desc, file_size;
-
-	printf("Sending File...\n");
-	stat(file_name, &obj);
-
-	// Open file
-	file_desc = open(file_name, O_RDONLY);
-	// Send file size
-	file_size = obj.st_size;
-	write(socket_desc, &file_size, sizeof(int));
-	// Send File
-	sendfile(socket_desc, file_desc, NULL, file_size);
-
-	printf("File %s sent\n",file_name);
-	return true;
-}
-
-
-
-/*
-This function is implementing the "GET" operation for a client-server file transfer system. The function takes in the name of the file to be retrieved and a socket descriptor. It checks if the file exists on the server and if it does, it sends an "OK" message to the client followed by the file data. If the file is not present, it sends a "NO" message to the client.
-
-The code checks if the file exists on the server by using the access function with the F_OK flag, which checks for the existence of the file. If the file is present, the function sends an "OK" message to the client using the write function, indicating that the server has the requested file. It then calls two other functions SendFileOverSocket and write_file, which send the contents of the file over the socket to the client.
-
-If the file is not present, the function sends a "NO" message to the client indicating that the file could not be found on the server.
-*/
-
-void performGET(char *file_name, int socket)
-{
-	char server_response[BUFSIZ];
-	printf("Performing GET request of client\n");
-
-	// Check if file present
-	if (access(file_name, F_OK) != -1)
-	{
-		//File is present on server
-		//Send "OK" message
-		strcpy(server_response, "OK");
-		write(socket, server_response, strlen(server_response));
-		
-		//Send File
-		if (SendFileOverSocket(socket, file_name) < 0) {
-      fprintf(stderr, "Error sending file.\n");
-      return;
-    }
-    
-    write_file(socket);
-    
-    printf("File %s sent successfully.\n", file_name);
-	}
-	else
-	{
-
-		printf("File not present at server.ABORTING.\n");
-
-		// Requested file does not exist, notify the client
-		strcpy(server_response, "NO");
-		write(socket, server_response, strlen(server_response)); 
-	}
-}
-
-
-
-
-
-
-/*
-The function performs the "PUT" operation for a client-server file transfer. It first checks if the file already exists on the server and notifies the client if it does. It then waits for the client to decide whether to overwrite the existing file or not. If the file does not exist on the server, an "OK" acknowledgement is sent to the client. The code then receives the file size from the client, allocates memory for it, and receives the file data. Finally, it creates a new file, writes the data received from the client to it and closes the file.
-*/
-
-
-void performPUT(char *file_name, int socket)
-{
-	int c,r;
-	printf("Performing PUT request of client\n");
-
-	char server_response[BUFSIZ], client_response[BUFSIZ];
-	if(access(file_name, F_OK) != -1)
-	{
-		// Notifing client that file is present at server
-		strcpy(server_response, "FP");
-		write(socket, server_response, strlen(server_response));
-		
-		// Getting the users choice to override or not 
-		r = recv(socket, client_response, BUFSIZ, 0);
-		client_response[r]='\0';
-
-		if(!strcmp(client_response, "N")){
-			printf("User says don't overwrite\n");
-			return;
-		}
-		printf("User says to overwrite the file.\n");
-
-	}
-	else
-	{
-		// Send acknowledgement "OK"
-		strcpy(server_response, "OK");
-		write(socket, server_response, strlen(server_response));
-	}
-
-
-	// Getting File 
-	
-	int file_size;
-	char *data;
-	// Recieving file size and allocating memory
-	recv(socket, &file_size, sizeof(int), 0);
-	data = malloc(file_size+1);
-
-	// Creating a new file, receiving and storing data in the file.
-	FILE *fp = fopen(file_name, "w");
-	r = recv(socket, data, file_size, 0);
-	data[r] = '\0';
-	printf("Size of file recieved is %d\n",r);
-	r = fputs(data, fp);
-	fclose(fp);
-}
-
-
-
-/*
-The function named performINFO which takes a file path as an argument. The function then uses the stat() function from the sys/stat.h library to retrieve information about the file, including its size, last modification time, owner, group, and permissions. If the stat() function fails to retrieve information about the file, an error message is printed to the console. The function then prints the retrieved information about the file to the console in a human-readable format.
-
-*/
-
-
-void performINFO(const char* filepath) {
-  struct stat filestat;
-  if (stat(filepath, &filestat) == -1) {
-      perror("Error");
-      return;
+  local_file = fopen(local_file_path, "rb");
+  if (local_file == NULL) {
+    printf("Error while opening local file\n");
+    return;
   }
 
-  printf("File: %s\n", filepath);
-  printf("Size: %lld bytes\n", (long long)filestat.st_size);
-  printf("Last modified: %s", ctime(&filestat.st_mtime));
-  printf("Owner: %d\n", filestat.st_uid);
-  printf("Group: %d\n", filestat.st_gid);
-  printf("Permissions: %o\n", filestat.st_mode & 0777);
-}
+  // Create the remote file
+  if (remote_file_path == NULL) {
+    printf("Remote file path not provided, using local file name as remote file name\n");
+    char* file_name = strrchr(local_file_path, '/');
+    if (file_name == NULL) {
+      printf("Error: Local file name not found\n");
+      fclose(local_file);
+      return;
+    }
+    remote_file_path = file_name + 1;
+  }
+  remote_file = fopen(remote_file_path, "wb");
+  if (remote_file == NULL) {
+    printf("Error while creating remote file\n");
+    fclose(local_file);
+    return;
+  }
 
+  // Get the expected file size from the client
+  if (recv(client_sock, &expected_file_size, sizeof(expected_file_size), 0) < 0) {
+    printf("Error while receiving file size from client\n");
+    fclose(local_file);
+    fclose(remote_file);
+    return;
+  }
 
-/*
-The GetArgumentFromRequest function takes a string request that represents a client request, finds the first occurrence of a space character (' ') in the request, and returns a pointer to the character immediately following the space. This effectively extracts the argument portion of the client request.
-
-For example, if the client request is "PUT file.txt", GetArgumentFromRequest would return a pointer to the character 'f', pointing to the start of the file name "file.txt".
-*/
-
-
-
-char* GetArgumentFromRequest(char* request)
-{
-	char *arg = strchr(request, ' ');
-	return arg + 1;
-}
-
-/*
-The function called ConnectionHandler which is a thread that handles a new client connection. It receives client requests, extracts the command and arguments from the request, and calls the corresponding function to perform the requested operation.
-
-The code performs the following operations:
-
-Receives the client request
-Extracts the command and arguments from the request
-Calls the appropriate function based on the command
-Sends the result of the operation back to the client
-The code supports the following commands:
-
-GET - receives a file from the server
-PUT - sends a file to the server
-MD - gets the metadata of a file
-RM - creates a new folder
-INFO - deletes a file or folder
-EXIT - terminates the connection.
-
-*/
-
-
-// Callback when a new connection is set up
-void *ConnectionHandler(void *socket_desc)
-{
-	int	choice, file_desc, file_size;
-	int socket = *(int*)socket_desc;
-
-	char reply[BUFSIZ], file_ext[BUFSIZ],server_response[BUFSIZ], client_request[BUFSIZ], file_name[BUFSIZ];
-	char *data;
-	while(1)
-	{	printf("\nWaiting for command\n");
-		int l = recv(socket, client_request, BUFSIZ, 0);
-		client_request[l]='\0';
-		printf("Command Recieved %s\n",client_request );
-		choice = GetCommandFromRequest(client_request);
-		switch(choice)
-		{
-			case 1:
-				strcpy(file_name, GetArgumentFromRequest(client_request));
-				performGET(file_name, socket);
-				break;
-			case 2:
-				strcpy(file_name, GetArgumentFromRequest(client_request));
-				performPUT(file_name, socket);
-				break;
-			case 3:
-        strcpy(file_name, GetArgumentFromRequest(client_request));
-        int status = mkdir(file_name, 0700); // create folder
-        if (status != 0) {
-          strcpy(reply, "Failed to create folder.\n");
-        } else {
-          strcpy(reply, "Folder created successfully.\n");
-        }
-        send(socket, reply, strlen(reply), 0);
-				break;
-			case 4:
-				// Delete file/folder
-        strcpy(file_name, GetArgumentFromRequest(client_request));
-        int status = remove(file_name);
-        if (status != 0) {
-          strcpy(reply, "Failed to delete file/folder.\n");
-        } else {
-          strcpy(reply, "File/folder deleted successfully.\n");
-        }
-        send(socket, reply, strlen(reply), 0);
-				break;
-			case 5:
-				strcpy(file_ext, GetArgumentFromRequest(client_request));
-				performINFO(file_name);
-				break;
-			case 6:
-				free(socket_desc);   
-				return 0;
-		}
-	}
-	free(socket_desc);   
-	return 0;
-}
-
-
-
-// function to read data from a USB device
-/*
-The function reads data from a USB device, processes it, and outputs the data in a specific format (using printf in this case). It uses the fread function to read data from the device's file pointer, and loops until the end of the file is reached or an error occurs. If data is successfully read, it is processed in the else statement, which in this case prints each byte read in hexadecimal format using printf.
-*/
-void* read_from_usb_device(void *arg) {
-  usb_device_t *dev = (usb_device_t *)arg;
-  char buffer[BUFSIZ];
-  while (1) {
-    ssize_t bytes_read = fread(buffer, 1, BUFSIZ, dev->fp);
-    if (bytes_read < 0) {
-      printf("Error reading from file %s\n", dev->path);
-      exit(1);
-    } else if (bytes_read == 0) {
-      // Reached end of file
+  // Copy the content of the local file to the remote file
+  while (total_bytes_received < expected_file_size && (bytes_read = fread(buffer, 1, sizeof(buffer), local_file)) > 0) {
+    if (fwrite(buffer, 1, bytes_read, remote_file) != bytes_read) {
+      printf("Error while writing to remote file\n");
       break;
-    } else {
-      // Process data read from the file
-      for (int i = 0; i < bytes_read; i++) {
-        printf("Byte read: %02X\n", buffer[i]);
-      }
     }
   }
-  return NULL;
-}
 
+  // Close the files
+  fclose(local_file);
+  fclose(remote_file);
 
-
-// function to periodically check for USB devices and open file pointers for available devices
-/*
-The function periodically_check_for_usb_devices2 is a program that periodically checks for the availability of USB devices by trying to open their file pointers. Once a device is available, it opens a file pointer for that device, creates a thread to read data from the device, and waits for all threads to finish. Afterward, it closes all file pointers. The program runs in a loop, checking for USB devices every 5 seconds until it finds all the specified number of devices.
-*/
-void periodically_check_for_usb_devices2(usb_device_t *devices) {
-  int seconds_to_wait = 5;
-  int num_devices = 0;
-
-  while (num_devices < NUM_USB_DEVICES) {
-    // check for available USB devices
-    for (int i = 0; i < NUM_USB_DEVICES; i++) {
-      if (devices[i].fp == NULL && access(devices[i].path, F_OK) != -1) {
-        // open file pointer for available device
-        devices[i].fp = fopen(devices[i].path, "r");
-        if (devices[i].fp == NULL) {
-          printf("Failed to open %s\n", devices[i].path);
-          exit(1);
-        }
-        printf("Found USB device %d at %s\n", i+1, devices[i].path);
-        num_devices++;
-      }
-    }
-    sleep(10);
-  }
-
-  // create threads to read from each USB device in parallel
-  pthread_t threads[NUM_USB_DEVICES];
-  for (int i = 0; i < NUM_USB_DEVICES; i++) {
-    pthread_create(&threads[i], NULL, read_from_usb_device, &devices[i]);
-  }
-
-  // wait for all threads to finish
-  for (int i = 0; i < NUM_USB_DEVICES; i++) {
-    pthread_join(threads[i], NULL);
-  }
-
-  // close all file pointers
-  for (int i = 0; i < NUM_USB_DEVICES; i++) {
-    fclose(devices[i].fp);
+  // Send the response to the client
+  char response[BUFFER_SIZE];
+  sprintf(response, "File %s created successfully\n", remote_file_path);
+  if (send(client_sock, response, strlen(response), 0) < 0) {
+    printf("Can't send response to client\n");
+    return;
   }
 }
 
 
-
-
-/*
-This function creates a socket and listens for incoming connections on a specified IP address and port number. It creates a socket, binds it to the IP address and port number, and listens for incoming connections. When a connection is accepted, it creates a new thread or process to handle the connection. If a thread is created, it calls the ConnectionHandler function, and if a process is created, it writes data to file1.txt and periodically checks for a second USB drive, calls the performINFO function and then calls the ConnectionHandler function.The code takes two command-line arguments: the port number and the IP address to bind to. If the command-line arguments are not provided, the program exits. Finally, it closes the socket and returns 0.
-*/
 
 
 
 int main(int argc , char *argv[])
 {
-  int socket_desc, client_sock;
+  int socket_desc, client_sock, read_size;
   socklen_t client_size;
   struct sockaddr_in server_addr, client_addr;
   char server_message[8196], client_message[8196];
-  FILE *fp1 = fopen("file1.txt", "r");
-  FILE *fp2 = fopen("file2.txt", "r")
-  char buffer[BUFSIZ];
+  char response[BUFFER_SIZE];
 
-  usb_device_t devices[NUM_USB_DEVICES];
-  devices[0].path = "/dev/sda1";
-  devices[0].fp = NULL;
-  devices[1].path = "/dev/sdb1";
-  devices[1].fp = NULL;
-
-
-  if(argc!=3){
+  if(argc!=2){
 		printf("Invalid arguments\n");
 		return 0;
 	}
-
-  //to pass port and address number through command line please use port number 9765 and use "127.0.0.1"
-  int port = atoi(argv[1]);
-  int address_number = atoi(argv[2]);
+   //to pass port number through command line please use port number
+  int PORTS = atoi(argv[1]);
   
   // Clean buffers:
   memset(server_message, '\0', sizeof(server_message));
@@ -607,74 +165,136 @@ int main(int argc , char *argv[])
   
   // Set port and IP:
   server_addr.sin_family = AF_INET;
-  server_addr.sin_port = htons(port);
-  server_addr.sin_addr.s_addr = inet_addr(address_number);
+  server_addr.sin_port = htons(PORTS);
+  server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
   
   // Bind to the set port and IP:
-  if(bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr))<0){
-    printf("Couldn't bind to the port\n");
+  if(bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0){
+    printf("Error while binding\n");
     return -1;
   }
-  printf("Done with binding\n");
+  printf("Binding done successfully\n");
   
-  // Listen for clients:
+  // Listen for incoming connections:
   if(listen(socket_desc, 1) < 0){
     printf("Error while listening\n");
     return -1;
   }
-  printf("\nListening for incoming connections.....\n");
 
   while(1){
-    // Accept an incoming connection:
+    // Accept incoming connection:
+    printf("Waiting for incoming connections...\n");
     client_size = sizeof(client_addr);
     client_sock = accept(socket_desc, (struct sockaddr*)&client_addr, &client_size);
-
+    
     if (client_sock < 0){
-      printf("Can't accept\n");
+      printf("Error while accepting connection\n");
+      return -1;
+    }
+    printf("Connection accepted successfully\n");
+  
+    printf("Client connected at IP: %s and port: %i\n", inet_ntoa(client_addr.sin_addr),   ntohs(client_addr.sin_port));
+    
+    // Receive command and remote file path:
+    read_size = recv(client_sock, client_message, sizeof(client_message), 0);
+    
+    if (read_size < 0) {
+      printf("Error while receiving command and remote file path\n");
       return -1;
     }
     
-    printf("Client connected at IP: %s and port: %i\n", 
-           inet_ntoa(client_addr.sin_addr), 
-           ntohs(client_addr.sin_port));
-
-
-    
-    // Create a new thread or process to handle the connection
-    #ifdef THREAD
-    pthread_t thread_id;
-    struct thread_args *args = malloc(sizeof(struct thread_args));
-    args->client_sock = client_sock;
-    args->fp1 = fp1;
-    args->fp2 = fp2;
-    if (pthread_create(&thread_id, NULL, ConnectionHandler, (void*)&client_sock) < 0) {
-      printf("Error creating thread\n");
-      return -1;
-    }
-    #else
-    pid_t pid = fork();
-    if (pid == -1) {
-      printf("Error forking process\n");
-      return -1;
-    } else if (pid == 0) {
-      // Child process: handle the connection
-      write_file(client_sock);
-      periodically_check_for_second_usb_drive(fp1, fp2, buffer);
-      printf("Data written in the file successfully.\n");
-      performINFO("folder/path/file.txt");
-      ConnectionHandler((void*)&client_sock);
-      periodically_check_for_usb_devices2(devices);
+    // Extract command and remote file path from client message:
+    char* command = strtok(client_message, " ");
+    char* remote_file_path = strtok(NULL, " ");
+    char* local_file_path = strtok(NULL, " ");
+  
+  
+    // Check if the command is GET:
+    if (strcmp(command, "GET") == 0) {
+      // Open file and send data:
+      FILE* file = fopen(remote_file_path, "rb");
+      if (file == NULL) {
+        printf("Error while opening remote file\n");
+        return -1;
+      }
+  
+  
+      // Read file data and send to client:
+      int bytes_read;
+      while ((bytes_read = fread(server_message, sizeof(char), sizeof(server_message), file)) > 0) {
+        if (send(client_sock, server_message, bytes_read, 0) < 0){
+          printf("Can't send file data\n");
+          return -1;
+        }
+        memset(server_message, '\0', sizeof(server_message));
+      }
+      // Close file and client socket:
+      fclose(file);
+    }else if (strcmp(command, "INFO") == 0){
+      // Call perform_info_command() to get file information and send it to the client:
+      perform_info_command(client_sock, remote_file_path);
+    }else if (strcmp(command, "MD") == 0){
+      // Create the folder using mkdir():
+      if (mkdir(remote_file_path, 0777) == 0) {
+        sprintf(response + strlen(response), "Directory created successfully\n");
+      } else {
+          sprintf(response + strlen(response), "Error creating directory\n");
+      }
+  
+      // Send the response to the client
+      if (send(client_sock, response, strlen(response), 0) < 0){
+          printf("Can't send\n");
+          return -1;
+      }
+  
+      printf("Response sent: %s\n", response);
       close(client_sock);
       return 0;
+      
+    }else if(strcmp(command, "RM") == 0){
+       // Check if the remote file path is a file or directory:
+      struct stat s;
+      if (stat(remote_file_path, &s) < 0) {
+        sprintf(response + strlen(response), "Error getting file or directory information\n");
+      } else {
+        if (S_ISREG(s.st_mode)) {
+          // Remove the file using unlink():
+          if (unlink(remote_file_path) == 0) {
+            sprintf(response + strlen(response), "File deleted successfully\n");
+          } else {
+            sprintf(response + strlen(response), "Error deleting file\n");
+          }
+        } else if (S_ISDIR(s.st_mode)) {
+          // Remove the directory using rmdir():
+          if (rmdir(remote_file_path) == 0) {
+            sprintf(response + strlen(response), "Directory deleted successfully\n");
+          } else {
+            sprintf(response + strlen(response), "Error deleting directory\n");
+          }
+        } else {
+          sprintf(response + strlen(response), "Unknown file type\n");
+        }
+      }
+      
+      // Send the response to the client
+      if (send(client_sock, response, strlen(response), 0) < 0){
+        printf("Can't send\n");
+        return -1;
+      }
+    
+      printf("Response sent: %s\n", response);
+      close(client_sock);
+      return 0;
+    }else if(strcmp(command, "PUT") == 0){
+      // Call perform_put_command() to create the file and store the data:
+      perform_put_command(client_sock, remote_file_path, local_file_path);
+    }else{
+      printf("Unknown command\n");
+      return -1;
     }
-    // Parent process: continue listening for new connections
-    #endif
-
   }
   
-  
-  // Closing the socket:
-  close(socket_desc);
+  close(client_sock);
   
   return 0;
 }
