@@ -1,10 +1,3 @@
-/*
- * server.c -- TCP Socket Server
- * 
- * adapted from: 
- *   https://www.educative.io/answers/how-to-implement-tcp-sockets-in-c
- */
-
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -68,6 +61,7 @@ void perform_info_command(int client_sock, const char* remote_file_path) {
 void perform_put_command(int client_sock, char* remote_file_path, char* local_file_path) {
   FILE* local_file;
   FILE* remote_file;
+  FILE* remote_file2;
   char buffer[BUFFER_SIZE];
   size_t bytes_read;
   int total_bytes_received = 0;
@@ -95,10 +89,13 @@ void perform_put_command(int client_sock, char* remote_file_path, char* local_fi
     }
     remote_file_path = file_name + 1;
   }
-  remote_file = fopen(remote_file_path, "wb");
-  if (remote_file == NULL) {
+  remote_file = fopen(strcat(remote_file_path, "1"), "wb");
+  remote_file2 = fopen(strcat(remote_file_path, "2"), "wb");
+  if (remote_file == NULL || remote_file2 == NULL) {
     printf("Error while creating remote file\n");
     fclose(local_file);
+    if (remote_file != NULL) fclose(remote_file);
+    if (remote_file2 != NULL) fclose(remote_file2);
     return;
   }
 
@@ -107,12 +104,13 @@ void perform_put_command(int client_sock, char* remote_file_path, char* local_fi
     printf("Error while receiving file size from client\n");
     fclose(local_file);
     fclose(remote_file);
+    fclose(remote_file2);
     return;
   }
 
   // Copy the content of the local file to the remote file
   while (total_bytes_received < expected_file_size && (bytes_read = fread(buffer, 1, sizeof(buffer), local_file)) > 0) {
-    if (fwrite(buffer, 1, bytes_read, remote_file) != bytes_read) {
+    if (fwrite(buffer, 1, bytes_read, remote_file) != bytes_read || fwrite(buffer, 1, bytes_read, remote_file2) != bytes_read) {
       printf("Error while writing to remote file\n");
       break;
     }
@@ -121,10 +119,11 @@ void perform_put_command(int client_sock, char* remote_file_path, char* local_fi
   // Close the files
   fclose(local_file);
   fclose(remote_file);
+  fclose(remote_file2);
 
   // Send the response to the client
   char response[BUFFER_SIZE];
-  sprintf(response, "File %s created successfully\n", remote_file_path);
+  sprintf(response, "File %s created successfully on both USB devices\n", remote_file_path);
   if (send(client_sock, response, strlen(response), 0) < 0) {
     printf("Can't send response to client\n");
     return;
