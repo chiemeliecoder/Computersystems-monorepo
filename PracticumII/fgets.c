@@ -1,10 +1,3 @@
-/*
- * client.c -- TCP Socket Client
- * 
- * adapted from: 
- *   https://www.educative.io/answers/how-to-implement-tcp-sockets-in-c
- */
-
 #include <stdio.h>
 #include <sys/socket.h> 
 #include <arpa/inet.h>
@@ -136,10 +129,7 @@ int main(int argc, char* argv[])
     return 0;
     
   }else if(strcmp(command, "PUT") == 0){
-    //char* local_file_path;
     if (argc == 3) {
-        // local_file_path = remote_file_path;
-        // remote_file_path = basename(remote_file_path);
         local_file_path = argv[2];
         remote_file_path = argv[1];
     } else {
@@ -177,7 +167,7 @@ int main(int argc, char* argv[])
 
     // Check if server is ready to receive file data:
     if (strcmp(response, "READY") != 0) {
-      printf("Server not ready\n");
+      printf("Server not ready: %s\n", response);
       return -1;
     }
 
