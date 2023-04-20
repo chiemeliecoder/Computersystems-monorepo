@@ -25,9 +25,5 @@
 #define SERVER_H
 #endif
 
-// function to handle the INFO command
+
 void perform_info_command(int client_sock, const char* remote_file_path);
-// function to handle the PUT command
-void perform_put_command(int client_sock, char* remote_file_path, char* local_file_path);
-// Define the client_handler function
-void *client_handler(void *arg);
