@@ -3,6 +3,7 @@
 #include <arpa/inet.h>
 #include <sys/stat.h>
 #include <sys/sendfile.h>
+#include <pthread.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
