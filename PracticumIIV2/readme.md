@@ -10,6 +10,7 @@ The server offers the following operations:
 
 ```INFO``` : deletes a file or folder
 
+here GET,PUT and INFO is really implemented properly
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Instructions
