@@ -4,4 +4,4 @@ server: server.c
 	gcc -Wall -o server server.c -lpthread
 
 client: fgets.c
-	gcc -pthread fgets.c -o fgets
+	gcc fgets.c -o fgets -lpthread
