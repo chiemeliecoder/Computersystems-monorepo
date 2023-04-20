@@ -3,10 +3,16 @@
 #include <arpa/inet.h>
 #include <sys/stat.h>
 #include <sys/sendfile.h>
+#include <pthread.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <dirent.h>
+#include <libgen.h>
 
 #include <dirent.h>
 #include <stdio.h>
