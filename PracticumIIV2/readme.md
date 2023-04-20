@@ -8,10 +8,6 @@ The server offers the following operations:
 
 ```GET``` : download file from server
 
-```MD``` : gets the metadata of a file
-
-```RM``` : creates a new folder
-
 ```INFO``` : deletes a file or folder
 
 ```EXIT``` : terminates the connection.
