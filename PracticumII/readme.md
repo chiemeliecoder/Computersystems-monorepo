@@ -16,6 +16,7 @@ The server offers the following operations:
 
 ```EXIT``` : terminates the connection.
 
+here MD and RM is really implemented
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Instructions
