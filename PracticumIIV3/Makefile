@@ -2,7 +2,7 @@ all: server fgets
 
 server: server.c
 	
-	gcc server.c -o server -lpthread
+	gcc -Wall -o server server.c -lpthread
 
 client: fgets.c
-	gcc fgets.c -o fgets -lpthread
+	gcc -Wall -o fgets fgets.c -lpthread
