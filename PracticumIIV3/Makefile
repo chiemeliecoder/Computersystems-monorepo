@@ -6,3 +6,4 @@ server: server.c
 
 client: fgets.c
 	gcc fgets.c -o fgets -lpthread
+ 
