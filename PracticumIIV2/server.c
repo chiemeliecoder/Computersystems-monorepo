@@ -154,7 +154,7 @@ int main(int argc , char *argv[])
       // Call perform_info_command() to get file information and send it to the client:
       perform_info_command(client_sock, remote_file_path);
     }else{
-      printf("Unknown command\n");
+      printf("PUT command\n");
       return -1;
     }
   }
